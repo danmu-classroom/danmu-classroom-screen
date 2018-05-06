@@ -1,0 +1,4 @@
+#log-screen {
+  height: 80vh;
+  overflow-y: scroll;
+}

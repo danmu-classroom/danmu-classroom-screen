@@ -1,0 +1,18 @@
+.danmu {
+  animation-duration: 20s;
+  animation-name: right-to-left;
+  animation-timing-function: linear;
+}
+
+@keyframes right-to-left {
+  from {
+    /* margin-left: 200%; */
+    margin-left: 200%;
+    width: 100%;
+  }
+  to {
+    /* margin-left: -100%; */
+    margin-left: -200%;
+    width: 100%;
+  }
+}

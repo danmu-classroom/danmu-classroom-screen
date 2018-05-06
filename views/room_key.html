@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>danmu-classroom-screen</title>
+  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="text-center">Room Key<span id="key" class="text-muted small ml-2"></span></h1>
+    <div>
+      <h2 class="text-center">Line Bot QRCode</h2>
+      <img src="../assets/img/line-bot-qr.png" class="rounded mx-auto d-block" alt="line-bot-qr">
+    </div>
+    <div class="d-flex justify-content-center">
+      <button type="button" class="btn btn-success" id="log-btn">Log</button>
+      <button type="button" class="btn btn-warning ml-2" id="hide-btn">Hide</button>
+      <button type="button" class="btn btn-danger ml-2" id="quit-btn">Quit</button>
+    </div>
+  </div>
+  <script src="../assets/js/require.js" charset="utf-8"></script>
+  <script src="../assets/js/room_key.js" charset="utf-8"></script>
+</body>
+
+</html>
