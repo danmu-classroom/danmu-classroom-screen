@@ -33,16 +33,16 @@ function exitApp() {
   app.quit()
 }
 
-function danmuWin() {
+function activateDanmuWin() {
   if (wins.danmu === null) wins.danmu = components.danmuWin()
 }
 
-function keyWin() {
+function activatekeyWin() {
   if (wins.key === null) wins.key = components.keyWin()
   if (!wins.key.isVisible()) wins.key.show()
 }
 
-function logWin() {
+function activatelogWin() {
   if (wins.log === null) wins.log = components.logWin()
   if (!wins.log.isVisible()) wins.log.show()
 }
@@ -51,14 +51,14 @@ function logWin() {
 app.on('ready', () => {
   logger.info('main@app-ready')
   appTray = components.appTray()
-  appTray.on('click', () => keyWin())
-  danmuWin()
-  keyWin()
+  appTray.on('click', () => activatekeyWin())
+  activateDanmuWin()
+  activatekeyWin()
 })
 app.on('activate', () => {
   logger.info('main@app-activate')
-  danmuWin()
-  keyWin()
+  activateDanmuWin()
+  activatekeyWin()
 })
 app.on('before-quit', () => {
   if (!server.killed) server.kill()
@@ -69,14 +69,11 @@ app.on('before-quit', () => {
 
 // IPC listener
 ipcMain.on('ask-for-key', (event, message) => event.sender.send('key-is', roomKey))
-ipcMain.on('open-log', (event, message) => {
-  logWin()
-})
+ipcMain.on('open-log', (event, message) => activatelogWin())
 ipcMain.on('quit-app', (event, message) => {
   logger.info('main@quit-app')
   exitApp()
 })
-
 
 // Child process listener
 server.on('message', (message) => {
