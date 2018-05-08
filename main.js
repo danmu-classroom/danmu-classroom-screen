@@ -27,7 +27,7 @@ function exitApp() {
   for (let key in wins) { // close all windows and clean global references
     if (wins.hasOwnProperty(key)) {
       if (wins[key] !== null) {
-        wins[key].close()
+        wins[key].destroy()
         wins[key] = null
       }
     }
