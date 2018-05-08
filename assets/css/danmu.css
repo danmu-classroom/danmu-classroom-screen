@@ -1,3 +1,7 @@
+#screen {
+  overflow: hidden;
+}
+
 .danmu {
   animation-duration: 20s;
   animation-name: right-to-left;

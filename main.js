@@ -1,95 +1,79 @@
 const path = require('path')
 const child_process = require('child_process')
-const {
-  libPath,
-  processPath,
-  webhookPath
-} = require(path.join(__dirname, 'config'))
-const createWindow = require(path.join(libPath, 'create_windows'))
-const logger = require(path.join(libPath, 'logger'))
+const paths = require(path.join(__dirname, 'config')).paths
+const createWindow = require(path.join(paths.lib, 'create_windows'))
+const logger = require(path.join(paths.lib, 'logger'))
 const {
   app,
   ipcMain
 } = require('electron')
 
-// global ref
-let mainWindow = null
-let keyWindow = null
-let logWindow = null
+// Global references
+const wins = {
+  danmu: null,
+  key: null,
+  log: null
+}
 let roomKey = null
 
-// run express server
-const server = child_process.fork(path.join(processPath, 'server.js'))
+// Child process
+const server = child_process.fork(path.join(paths.proc, 'server.js')) // run express server
+const createRoom = child_process.fork(path.join(paths.proc, 'create_room.js')) // fetch ngrok and room
 
-// run ngrok
-const createRoom = child_process.fork(path.join(processPath, 'create_room.js'))
-
+// Functions
 function exitApp() {
   server.kill()
   createRoom.kill()
-  if (mainWindow !== null) {
-    mainWindow.close()
-  }
-  if (keyWindow !== null) {
-    keyWindow.close()
-  }
-  if (logWindow !== null) {
-    logWindow.close()
+  for (let key in wins) { // close all windows and clean global references
+    if (wins.hasOwnProperty(key)) {
+      if (wins[key] !== null) {
+        wins[key].close()
+        wins[key] = null
+      }
+    }
   }
   app.quit()
 }
 
-function createDanmuWindow() {
-  if (mainWindow === null) {
-    mainWindow = createWindow.danmu()
-    mainWindow.on('closed', () => {
-      logger.info('main@danmu-window-closed')
-      mainWindow = null
-    })
+function danmuWin() {
+  if (wins.danmu === null) {
+    wins.danmu = createWindow.danmu()
+    wins.danmu.on('closed', () => (wins.danmu = null))
   }
 }
 
-function createKeyWindow() {
-  if (keyWindow === null) {
-    keyWindow = createWindow.roomKey()
-    keyWindow.on('closed', () => {
-      logger.info('main@key-window-closed')
-      keyWindow = null
-    })
-    keyWindow.on('hide', () => {
-      logger.info('main@key-window-hide')
-    })
+function keyWin() {
+  if (wins.key === null) {
+    wins.key = createWindow.roomKey()
+    wins.key.on('closed', () => (wins.key = null))
+  } else if (wins.key.isMinimized()) {
+    wins.key.restore()
+  } else if (!wins.key.isVisible()) {
+    wins.key.show()
   }
 }
 
-function createLogWindow() {
-  if (logWindow === null) {
-    logWindow = createWindow.log()
-    logWindow.on('closed', () => {
-      logger.info('main@log-window-closed')
-      logWindow = null
-    })
+function logWin() {
+  if (wins.log === null) {
+    wins.log = createWindow.log()
+    wins.log.on('closed', () => (wins.log = null))
+  } else if (wins.log.isMinimized()) {
+    wins.log.restore()
+  } else if (!wins.log.isVisible()) {
+    wins.log.show()
   }
 }
 
-// app
+// App listener
 app.on('ready', () => {
   logger.info('main@app-ready')
-  createDanmuWindow()
-  createKeyWindow()
+  danmuWin()
+  keyWin()
 })
 app.on('activate', () => {
   logger.info('main@app-activate')
-  createDanmuWindow()
-  createKeyWindow()
-  if (keyWindow.isMinimized()) {
-    logger.info('main@key-window-restore')
-    keyWindow.restore()
-  }
-  if (!keyWindow.isVisible()) {
-    logger.info('main@key-window-show')
-    keyWindow.show()
-  }
+  danmuWin()
+  keyWin()
 })
 app.on('window-all-closed', () => {
   logger.info('main@app-window-all-closed')
@@ -98,23 +82,10 @@ app.on('window-all-closed', () => {
   }
 })
 
-// IPC between main and renderer
-ipcMain.on('danmu-painted', (event, danmu) => {})
-ipcMain.on('key-rendered', (event, key) => {})
+// IPC listener
 ipcMain.on('ask-for-key', (event, message) => event.sender.send('key-is', roomKey))
-ipcMain.on('key-window-hide', (event, message) => {
-  keyWindow.hide()
-})
-ipcMain.on('open-log-window', (event, message) => {
-  createLogWindow()
-  if (logWindow.isMinimized()) {
-    logger.info('main@log-window-restore')
-    logWindow.restore()
-  }
-  if (!logWindow.isVisible()) {
-    logger.info('main@log-window-show')
-    logWindow.show()
-  }
+ipcMain.on('open-log', (event, message) => {
+  logWin()
 })
 ipcMain.on('quit-app', (event, message) => {
   logger.info('main@quit-app')
@@ -122,20 +93,16 @@ ipcMain.on('quit-app', (event, message) => {
 })
 
 
-// IPC between main and child_process
+// Child process listener
 server.on('message', (message) => {
-  // danmu received
-  if (message.status === 'ok') {
-    mainWindow.webContents.send('paint-danmu', message.params)
+  if (message.status === 'ok') { // danmu received
+    wins.danmu.webContents.send('paint-danmu', message.params)
   }
 })
-
 createRoom.on('message', (message) => {
-  // ngrok connected
-  if (message.status === 'ok') {
-    // get room key
+  if (message.status === 'ok') { // ngrok connected
     roomKey = String(message.key)
-    mainWindow.webContents.send('key-is', roomKey)
-    keyWindow.webContents.send('key-is', roomKey)
+    wins.danmu.webContents.send('key-is', roomKey)
+    wins.key.webContents.send('key-is', roomKey)
   }
 })

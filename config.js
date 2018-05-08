@@ -1,25 +1,22 @@
 const path = require('path')
 
-const rootPath = path.join(__dirname)
-const processPath = path.join(rootPath, 'process')
-const libPath = path.join(rootPath, 'lib')
-const viewsPath = path.join(rootPath, 'views')
-const assetsPath = path.join(rootPath, 'assets')
-const logPath = path.join(rootPath, 'log')
+const paths = {}
+paths.root = path.join(__dirname)
+paths.proc = path.join(paths.root, 'process')
+paths.lib = path.join(paths.root, 'lib')
+paths.views = path.join(paths.root, 'views')
+paths.assets = path.join(paths.root, 'assets')
+paths.log = path.join(paths.root, 'log')
 
-const port = 8080
-const danmuServerUrl = 'https://danmu-classroom.herokuapp.com'
-// const danmuServerUrl = 'http://localhost:3000'
-const webhookPath = '/webhook'
+const localServer = {}
+localServer.port = 8080
+localServer.webhookPath = '/webhook'
+
+const danmuServer = 'https://danmu-classroom.herokuapp.com'
+// const danmuServer = 'http://localhost:3000'
 
 module.exports = {
-  rootPath: rootPath,
-  processPath: processPath,
-  libPath: libPath,
-  viewsPath: viewsPath,
-  assetsPath: assetsPath,
-  logPath: logPath,
-  port: port,
-  danmuServerUrl: danmuServerUrl,
-  webhookPath: webhookPath
+  paths: paths,
+  localServer: localServer,
+  danmuServer: danmuServer
 }

@@ -3,16 +3,15 @@ const url = require('url')
 const fetch = require('node-fetch')
 const ngrok = require('ngrok')
 const {
-  libPath,
-  port,
-  webhookPath,
-  danmuServerUrl
+  paths,
+  localServer,
+  danmuServer
 } = require(path.join(__dirname, '../config'))
-const logger = require(path.join(libPath, 'logger'))
+const logger = require(path.join(paths.lib, 'logger'))
 const jsonHeader = {
   'Content-Type': 'application/json; charset=utf-8'
 }
-const createRoomUrl = url.resolve(danmuServerUrl, 'rooms')
+const createRoomUrl = url.resolve(danmuServer, 'rooms')
 
 async function initNgrok(portNumber) {
   const ngrokUrl = await ngrok.connect(portNumber)
@@ -40,8 +39,8 @@ async function initRoom(webhook) {
   return json
 }
 
-async function createRoom() {
-  const tunnel = await initNgrok(port)
+async function createRoom(portNumber, webhookPath) {
+  const tunnel = await initNgrok(portNumber)
   const webhook = url.resolve(tunnel, webhookPath)
   const room = await initRoom(webhook)
   return {
@@ -50,24 +49,24 @@ async function createRoom() {
   }
 }
 
-createRoom().then((room) => {
-  // task done
-  process.send({
-    status: 'ok',
-    webhook: room.webhook,
-    key: room.key
+createRoom(localServer.port, localServer.webhookPath).then(
+  (room) => { // task done
+    process.send({
+      status: 'ok',
+      webhook: room.webhook,
+      key: room.key
+    })
+  },
+  (err) => { // catch error
+    process.send({
+      status: 'error',
+      error: err
+    })
+    logger.error(`process@create-room@error ${err}`)
   })
-}, (err) => {
-  // catch error
-  process.send({
-    status: 'error',
-    error: err
-  })
-  logger.error(`process@create-room@error ${err}`)
-})
 
 // kill process
 process.on('SIGTERM', () => {
   logger.info('process@create-room@SIGTERM')
   process.exit(0)
-});
+})

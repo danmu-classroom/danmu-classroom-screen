@@ -1,48 +1,41 @@
+const thisWindow = remote.getCurrentWindow()
+thisWindow.on('closed', () => {
+  logger.info('view@danmu@closed')
+  thisWindow = null
+})
+
 const screen = document.getElementById("screen")
 const keyDom = document.getElementById("key")
-
-function addDanmu(message) {
-  // create danmu
-  const danmu = document.createElement('div')
-  danmu.classList.add('danmu')
-  danmu.innerHTML = message.content
-
-  // danmu animation end then destroy it
-  danmu.addEventListener("animationend", () => {
-    danmu.parentNode.removeChild(danmu)
-  }, false);
-
-  // paint to screen
-  screen.appendChild(danmu)
-}
 
 function addKey(number) {
   keyDom.innerHTML = number
 }
 
+function addDanmu(message) {
+  const danmu = document.createElement('div')
+  danmu.classList.add('danmu')
+  danmu.innerHTML = message.content
+  danmu.addEventListener("animationend", () => { // danmu animation end then destroy it
+    danmu.parentNode.removeChild(danmu)
+  }, false)
+  screen.appendChild(danmu) // paint to screen
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   logger.info('view@danmu@DOMContentLoaded')
-
-  // init danmu
-  addDanmu({
+  addDanmu({ // init danmu
     content: 'Danmu Classroom launched.'
   })
 
-  // paint danmu
-  ipcRenderer.on('paint-danmu', (event, message) => {
-    addDanmu(message)
-    event.sender.send('danmu-painted', message)
+  // IPC listener
+  ipcRenderer.on('paint-danmu', (event, message) => { // paint danmu
     logger.info(`view@danmu@danmu-painted danmu: ${JSON.stringify(message)}`)
+    addDanmu(message)
   })
-
-  // ask key
-  ipcRenderer.send('ask-for-key')
-  logger.info('view@danmu@ask-for-key')
-
-  // update key
-  ipcRenderer.on('key-is', (event, key) => {
+  ipcRenderer.on('key-is', (event, key) => { // update key
     addKey(key)
-    event.sender.send('key-rendered', key)
     logger.info(`view@danmu@key-rendered key: ${key}`)
   })
-});
+  ipcRenderer.send('ask-for-key') // ask key
+  logger.info('view@danmu@ask-for-key')
+})

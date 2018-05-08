@@ -1,12 +1,13 @@
 const path = require('path')
 const fs = require('fs')
+const mousetrap = require('mousetrap')
 const tail = require('tail')
-const ipcRenderer = require('electron').ipcRenderer
 const {
-  libPath,
-  logPath
-} = require('../config')
-const logger = require(path.join(libPath, 'logger'))
+  ipcRenderer,
+  remote
+} = require('electron')
+const paths = require('../config').paths
+const logger = require(path.join(paths.lib, 'logger'))
 const $ = require('jquery')
 const JQuery = $;
 const Popper = require('popper.js')
