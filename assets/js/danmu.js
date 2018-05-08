@@ -16,7 +16,7 @@ function addDanmu(message) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  logger.info('view@danmu@DOMContentLoaded')
+  logger.info(`${thisFilename}Win@DOMContentLoaded`)
   addDanmu({ // init danmu
     content: 'Danmu Classroom launched.'
   })
@@ -24,12 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // IPC listener
   ipcRenderer.on('paint-danmu', (event, message) => { // paint danmu
     addDanmu(message)
-    logger.info(`view@danmu@danmu-painted danmu: ${JSON.stringify(message)}`)
+    logger.info(`${thisFilename}Win@danmu-painted danmu: ${JSON.stringify(message)}`)
   })
   ipcRenderer.on('key-is', (event, key) => { // update key
     addKey(key)
-    logger.info(`view@danmu@key-rendered key: ${key}`)
+    logger.info(`${thisFilename}Win@key-rendered key: ${key}`)
   })
   ipcRenderer.send('ask-for-key') // ask key
-  logger.info('view@danmu@ask-for-key')
+  logger.info(`${thisFilename}Win@ask-for-key`)
 })
