@@ -5,14 +5,14 @@ function addKey(number) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  logger.info('view@key@DOMContentLoaded')
+  logger.info(`${thisFilename}Win@DOMContentLoaded`)
 
   // IPC listener
   ipcRenderer.send('ask-for-key') // ask key
   logger.info('view@key@ask-for-key')
   ipcRenderer.on('key-is', (event, key) => { // update key
     addKey(key)
-    logger.info(`view@key@key-rendered key: ${key}`)
+    logger.info(`${thisFilename}Win@key-rendered key: ${key}`)
   })
 
   // Buttons linstener
@@ -21,13 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const quitBtn = document.getElementById("quit-btn")
   logBtn.addEventListener('click', () => {
     ipcRenderer.send('open-log')
-    logger.info('view@key@open-log')
+    logger.info(`${thisFilename}Win@open-log`)
   })
   hideBtn.addEventListener('click', () => {
     hideOrMin()
   })
   quitBtn.addEventListener('click', () => {
     ipcRenderer.send('quit-app')
-    logger.info('view@key@quit-app')
+    logger.info(`${thisFilename}Win@quit-app`)
   })
 })

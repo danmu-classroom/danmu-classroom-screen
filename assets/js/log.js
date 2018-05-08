@@ -35,7 +35,7 @@ function logScrollButtom() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  logger.info('view@log@DOMContentLoaded')
+  logger.info(`${thisFilename}Win@DOMContentLoaded`)
 
   const logStream = new tail.Tail(logFile, {
     useWatchFile: true
