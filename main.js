@@ -23,18 +23,11 @@ const createRoom = child_process.fork(path.join(paths.proc, 'create_room.js')) /
 
 // Functions
 function exitApp() {
-  if (!server.killed) {
-    server.kill()
-  }
-  if (!createRoom.killed) {
-    createRoom.kill()
-  }
-  for (let key in wins) { // close all windows and clean global references
-    if (wins.hasOwnProperty(key)) {
-      if (wins[key] !== null) {
-        wins[key].destroy()
-        wins[key] = null
-      }
+  // close all windows and clean global references
+  for (let key in wins) {
+    if (wins.hasOwnProperty(key) && wins[key] !== null) {
+      wins[key].destroy()
+      wins[key] = null
     }
   }
   app.quit()
