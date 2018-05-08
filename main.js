@@ -1,9 +1,8 @@
 const path = require('path')
 const child_process = require('child_process')
 const paths = require(path.join(__dirname, 'config')).paths
-const createWindow = require(path.join(paths.lib, 'create_windows'))
+const components = require(path.join(paths.lib, 'components'))
 const logger = require(path.join(paths.lib, 'logger'))
-
 const {
   app,
   ipcMain,
