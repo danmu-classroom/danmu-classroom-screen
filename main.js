@@ -1,7 +1,7 @@
 const path = require('path')
 const child_process = require('child_process')
 const paths = require(path.join(__dirname, 'config')).paths
-const createWindow = require(path.join(paths.lib, 'create_windows'))
+const components = require(path.join(paths.lib, 'components'))
 const logger = require(path.join(paths.lib, 'logger'))
 const {
   app,
@@ -9,6 +9,7 @@ const {
 } = require('electron')
 
 // Global references
+let appTray = null
 const wins = {
   danmu: null,
   key: null,
@@ -40,37 +41,24 @@ function exitApp() {
 }
 
 function danmuWin() {
-  if (wins.danmu === null) {
-    wins.danmu = createWindow.danmu()
-    wins.danmu.on('closed', () => (wins.danmu = null))
-  }
+  if (wins.danmu === null) wins.danmu = components.danmuWin()
 }
 
 function keyWin() {
-  if (wins.key === null) {
-    wins.key = createWindow.roomKey()
-    wins.key.on('closed', () => (wins.key = null))
-  } else if (wins.key.isMinimized()) {
-    wins.key.restore()
-  } else if (!wins.key.isVisible()) {
-    wins.key.show()
-  }
+  if (wins.key === null) wins.key = components.keyWin()
+  if (!wins.key.isVisible()) wins.key.show()
 }
 
 function logWin() {
-  if (wins.log === null) {
-    wins.log = createWindow.log()
-    wins.log.on('closed', () => (wins.log = null))
-  } else if (wins.log.isMinimized()) {
-    wins.log.restore()
-  } else if (!wins.log.isVisible()) {
-    wins.log.show()
-  }
+  if (wins.log === null) wins.log = components.logWin()
+  if (!wins.log.isVisible()) wins.log.show()
 }
 
 // App listener
 app.on('ready', () => {
   logger.info('main@app-ready')
+  appTray = components.appTray()
+  appTray.on('click', () => keyWin())
   danmuWin()
   keyWin()
 })
