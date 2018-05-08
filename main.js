@@ -22,8 +22,12 @@ const createRoom = child_process.fork(path.join(paths.proc, 'create_room.js')) /
 
 // Functions
 function exitApp() {
-  server.kill()
-  createRoom.kill()
+  if (!server.killed) {
+    server.kill()
+  }
+  if (!createRoom.killed) {
+    createRoom.kill()
+  }
   for (let key in wins) { // close all windows and clean global references
     if (wins.hasOwnProperty(key)) {
       if (wins[key] !== null) {
@@ -74,12 +78,6 @@ app.on('activate', () => {
   logger.info('main@app-activate')
   danmuWin()
   keyWin()
-})
-app.on('window-all-closed', () => {
-  logger.info('main@app-window-all-closed')
-  if (process.platform !== 'darwin') {
-    exitApp()
-  }
 })
 
 // IPC listener
