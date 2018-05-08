@@ -55,7 +55,9 @@ function logScrollButtom() {
 document.addEventListener("DOMContentLoaded", () => {
   logger.info('view@log@DOMContentLoaded')
 
-  const logStream = new tail.Tail(logFile)
+  const logStream = new tail.Tail(logFile, {
+    useWatchFile: true
+  })
 
   logStream.on("line", function(data) {
     addNewLog(data)
