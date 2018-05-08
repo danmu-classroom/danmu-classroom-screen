@@ -5,12 +5,11 @@ const components = require(path.join(paths.lib, 'components'))
 const logger = require(path.join(paths.lib, 'logger'))
 const {
   app,
-  ipcMain,
-  Tray
+  ipcMain
 } = require('electron')
 
 // Global references
-var win_tray = null
+let appTray = null
 const wins = {
   danmu: null,
   key: null,
@@ -41,55 +40,30 @@ function exitApp() {
   app.quit()
 }
 
-function trayIcon(){
-  if(win_tray === null){
-    win_tray = new Tray(path.join(paths.assets, 'img/icon.png'))
-    win_tray.setToolTip('Danmu Class')
-  }
-}
-
 function danmuWin() {
-  if (wins.danmu === null) {
-    wins.danmu = createWindow.danmu()
-    wins.danmu.on('closed', () => (wins.danmu = null))
-  }
+  if (wins.danmu === null) wins.danmu = components.danmuWin()
 }
 
 function keyWin() {
-  trayIcon()
-  if (wins.key === null) {
-    wins.key = createWindow.roomKey()
-    wins.key.on('closed', () => (wins.key = null))
-  } else if (wins.key.isMinimized()) {
-    wins.key.restore()
-  } else if (!wins.key.isVisible()) {
-    wins.key.show()
-  }
-  win_tray.on('click', () => {wins.key.isVisible() ? wins.key.hide() : wins.key.show()})
-
+  if (wins.key === null) wins.key = components.keyWin()
+  if (!wins.key.isVisible()) wins.key.show()
 }
 
 function logWin() {
-  if (wins.log === null) {
-    wins.log = createWindow.log()
-    wins.log.on('closed', () => (wins.log = null))
-  } else if (wins.log.isMinimized()) {
-    wins.log.restore()
-  } else if (!wins.log.isVisible()) {
-    wins.log.show()
-  }
+  if (wins.log === null) wins.log = components.logWin()
+  if (!wins.log.isVisible()) wins.log.show()
 }
 
 // App listener
 app.on('ready', () => {
   logger.info('main@app-ready')
-  trayIcon()
+  appTray = components.appTray()
+  appTray.on('click', () => keyWin())
   danmuWin()
   keyWin()
 })
 app.on('activate', () => {
   logger.info('main@app-activate')
-  trayIcon()
   danmuWin()
   keyWin()
 })
