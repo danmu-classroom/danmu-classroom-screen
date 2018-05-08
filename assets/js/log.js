@@ -1,23 +1,5 @@
-const thisWindow = remote.getCurrentWindow()
-thisWindow.on('closed', () => {
-  logger.info('view@log@closed')
-  thisWindow = null
-})
-thisWindow.on('show', () => {
-  logger.info('view@log@show')
-})
-thisWindow.on('restore', () => {
-  logger.info('view@log@restore')
-})
-
 const logFile = path.join(paths.log, 'danmu.log')
 const logScreen = document.getElementById("log-screen")
-
-// open devtools
-mousetrap.bind(['command+alt+i', 'ctrl+alt+k'], function() {
-  logger.info('view@log@open-devtools')
-  remote.getCurrentWebContents().openDevTools()
-})
 
 function addNewLog(text) {
   const logJson = JSON.parse(text)

@@ -1,9 +1,3 @@
-const thisWindow = remote.getCurrentWindow()
-thisWindow.on('closed', () => {
-  logger.info('view@danmu@closed')
-  thisWindow = null
-})
-
 const screen = document.getElementById("screen")
 const keyDom = document.getElementById("key")
 
@@ -29,8 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // IPC listener
   ipcRenderer.on('paint-danmu', (event, message) => { // paint danmu
-    logger.info(`view@danmu@danmu-painted danmu: ${JSON.stringify(message)}`)
     addDanmu(message)
+    logger.info(`view@danmu@danmu-painted danmu: ${JSON.stringify(message)}`)
   })
   ipcRenderer.on('key-is', (event, key) => { // update key
     addKey(key)

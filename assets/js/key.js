@@ -1,21 +1,3 @@
-const thisWindow = remote.getCurrentWindow()
-thisWindow.on('closed', () => {
-  logger.info('view@key@closed')
-  thisWindow = null
-})
-thisWindow.on('show', () => {
-  logger.info('view@key@show')
-})
-thisWindow.on('restore', () => {
-  logger.info('view@key@restore')
-})
-
-// open devtools
-mousetrap.bind(['command+alt+i', 'ctrl+alt+k'], function() {
-  logger.info('view@key@open-devtools')
-  remote.getCurrentWebContents().openDevTools()
-})
-
 const keyDom = document.getElementById("key")
 
 function addKey(number) {
@@ -42,8 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     logger.info('view@key@open-log')
   })
   hideBtn.addEventListener('click', () => {
-    thisWindow.hide()
-    logger.info('view@key@hided')
+    hideOrMin()
   })
   quitBtn.addEventListener('click', () => {
     ipcRenderer.send('quit-app')
