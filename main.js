@@ -60,6 +60,12 @@ app.on('activate', () => {
   danmuWin()
   keyWin()
 })
+app.on('before-quit', () => {
+  if (!server.killed) server.kill()
+  if (!createRoom.killed) createRoom.kill()
+  if (roomKey !== null) roomKey = null
+  if (appTray !== null) appTray = null
+})
 
 // IPC listener
 ipcMain.on('ask-for-key', (event, message) => event.sender.send('key-is', roomKey))
