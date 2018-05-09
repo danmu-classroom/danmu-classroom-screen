@@ -60,11 +60,10 @@ app.on('activate', () => {
   activateDanmuWin()
   activatekeyWin()
 })
-app.on('before-quit', () => {
+app.on('will-quit', () => {
+  // send SIGTERM to child process
   if (!server.killed) server.kill()
   if (!createRoom.killed) createRoom.kill()
-  if (roomKey !== null) roomKey = null
-  if (appTray !== null) appTray = null
 })
 
 // IPC listener
