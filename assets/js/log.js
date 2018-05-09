@@ -1,52 +1,53 @@
 const logFile = path.join(paths.log, 'danmu.log')
-const logScreen = document.getElementById("log-screen")
+const logStream = new tail.Tail(logFile, {
+  useWatchFile: true
+})
+const logScreen = $("#log-screen")
 
 function addNewLog(text) {
   const logJson = JSON.parse(text)
-  const logDom = document.createElement('p')
-  const levelDom = document.createElement('span')
-  const timeDom = document.createElement('span')
-  const msgDom = document.createElement('span')
 
-  levelDom.innerHTML = logJson.level
-  if (logJson.level === 'info') {
-    levelDom.classList.add('text-info')
-  } else if (logJson.level === 'error') {
-    levelDom.classList.add('text-danger')
+  const logDom = $("<p></p>")
+  const levelDom = $("<span></span>")
+  const timeDom = $("<span></span>")
+  const msgDom = $("<span></span>")
+
+  logDom.addClass("log")
+  logDom.addClass("card-text")
+
+  levelDom.text(logJson.level)
+  if (logJson.level === "info") {
+    levelDom.addClass("text-info")
+  } else if (logJson.level === "error") {
+    levelDom.addClass("text-danger")
   }
+  levelDom.appendTo(logDom)
 
-  timeDom.innerHTML = logJson.timestamp
-  timeDom.classList.add('ml-2')
+  timeDom.text(logJson.timestamp)
+  timeDom.addClass("ml-2")
+  timeDom.appendTo(logDom)
 
-  msgDom.innerHTML = logJson.message
-  msgDom.classList.add('ml-2')
+  msgDom.text(logJson.message)
+  msgDom.addClass("ml-2")
+  msgDom.appendTo(logDom)
 
-  logDom.classList.add('log')
-  logDom.classList.add('card-text')
-  logDom.appendChild(levelDom)
-  logDom.appendChild(timeDom)
-  logDom.appendChild(msgDom)
-
-  logScreen.appendChild(logDom)
+  logDom.appendTo(logScreen)
 }
+
 
 function logScrollButtom() {
-  logScreen.scrollTop = logScreen.scrollHeight
+  logScreen[0].scrollTop = logScreen[0].scrollHeight
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  logger.info(`${thisFilename}Win@DOMContentLoaded`)
-
-  const logStream = new tail.Tail(logFile, {
-    useWatchFile: true
-  })
+$(document).ready(() => {
+  logger.info(`${thisFilename}Win@ready`)
 
   logStream.on("line", function(data) {
     addNewLog(data)
     logScrollButtom()
   })
-
   logStream.on("error", function(error) {
     console.log(`ERROR: ${error}`)
   })
+
 })

@@ -1,35 +1,28 @@
-const screen = document.getElementById("screen")
-const keyDom = document.getElementById("key")
-
-function addKey(number) {
-  keyDom.innerHTML = number
-}
-
 function addDanmu(message) {
-  const danmu = document.createElement('div')
-  danmu.classList.add('danmu')
-  danmu.innerHTML = message.content
-  danmu.addEventListener("animationend", () => { // danmu animation end then destroy it
-    danmu.parentNode.removeChild(danmu)
-  }, false)
-  screen.appendChild(danmu) // paint to screen
+  const danmu = $("<div></div>")
+  danmu.addClass("danmu")
+  danmu.text(message.content) // NOTE: xss fixed, do not use innerHtml for unsafe input
+  danmu.on("animationend", () => danmu.remove()) // danmu animation end then destroy it
+  danmu.appendTo($("#screen")) // paint to screen
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  logger.info(`${thisFilename}Win@DOMContentLoaded`)
-  addDanmu({ // init danmu
+$(document).ready(() => {
+  logger.info(`${thisFilename}Win@ready`)
+  // ask key
+  ipcRenderer.send('ask-for-key')
+  logger.info(`${thisFilename}Win@ask-for-key`)
+  // init danmu
+  addDanmu({
     content: 'Danmu Classroom launched.'
   })
+})
 
-  // IPC listener
-  ipcRenderer.on('paint-danmu', (event, message) => { // paint danmu
-    addDanmu(message)
-    logger.info(`${thisFilename}Win@danmu-painted danmu: ${JSON.stringify(message)}`)
-  })
-  ipcRenderer.on('key-is', (event, key) => { // update key
-    addKey(key)
-    logger.info(`${thisFilename}Win@key-rendered key: ${key}`)
-  })
-  ipcRenderer.send('ask-for-key') // ask key
-  logger.info(`${thisFilename}Win@ask-for-key`)
+// IPC listener
+ipcRenderer.on('paint-danmu', (event, message) => { // paint danmu
+  addDanmu(message)
+  logger.info(`${thisFilename}Win@danmu-painted danmu: ${JSON.stringify(message)}`)
+})
+ipcRenderer.on('key-is', (event, key) => { // update key
+  $("#key").text(key)
+  logger.info(`${thisFilename}Win@key-rendered key: ${key}`)
 })
