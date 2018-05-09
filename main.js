@@ -57,7 +57,11 @@ function activatelogWin() {
 app.on('ready', () => {
   logger.info('main@app-ready')
   appTray = components.appTray()
-  appTray.on('click', () => activatekeyWin())
+  appTray.on('click', () => {
+    logger.info('appTray@click')
+    activateDanmuWin()
+    activatekeyWin()
+  })
   activateDanmuWin()
   activatekeyWin()
 })
