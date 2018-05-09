@@ -15,20 +15,12 @@ require('bootstrap')
 const thisFilename = path.basename(__filename, '.html')
 const thisWindow = remote.getCurrentWindow()
 
-// Hide or minimize instead of close the window
-function hideOrMin() {
-  if (process.platform === 'darwin') {
-    thisWindow.hide()
-  } else {
-    thisWindow.minimize()
-  }
+// when close, just hide
+window.onbeforeunload = (event) => {
+  thisWindow.hide()
+  event.returnValue = false
 }
 
-// Window listener
-window.onbeforeunload = (e) => {
-  hideOrMin()
-  e.returnValue = false
-}
 // User input listener
 mousetrap.bind(['command+alt+i', 'ctrl+shift+i'], function() {
   thisWindow.openDevTools() // open devtools

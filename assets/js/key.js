@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     logger.info(`${thisFilename}Win@open-log`)
   })
   hideBtn.addEventListener('click', () => {
-    hideOrMin()
+    thisWindow.hide()
   })
   quitBtn.addEventListener('click', () => {
     ipcRenderer.send('quit-app')

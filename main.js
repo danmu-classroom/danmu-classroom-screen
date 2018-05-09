@@ -23,33 +23,32 @@ const createRoom = child_process.fork(path.join(paths.proc, 'create_room.js')) /
 
 // Functions
 function exitApp() {
-  if (!server.killed) {
-    server.kill()
-  }
-  if (!createRoom.killed) {
-    createRoom.kill()
-  }
-  for (let key in wins) { // close all windows and clean global references
-    if (wins.hasOwnProperty(key)) {
-      if (wins[key] !== null) {
-        wins[key].destroy()
-        wins[key] = null
-      }
+  // destroy all windows and clean global references
+  for (let key in wins) {
+    if (wins.hasOwnProperty(key) && wins[key] !== null) {
+      wins[key].destroy()
+      wins[key] = null
     }
   }
+  // destroy tray and clean global reference
+  if (appTray !== null) {
+    appTray.destroy()
+    appTray = null
+  }
+  // send before-quit event, event order: before-quit > will-quit > quit
   app.quit()
 }
 
-function danmuWin() {
+function activateDanmuWin() {
   if (wins.danmu === null) wins.danmu = components.danmuWin()
 }
 
-function keyWin() {
+function activatekeyWin() {
   if (wins.key === null) wins.key = components.keyWin()
   if (!wins.key.isVisible()) wins.key.show()
 }
 
-function logWin() {
+function activatelogWin() {
   if (wins.log === null) wins.log = components.logWin()
   if (!wins.log.isVisible()) wins.log.show()
 }
@@ -58,26 +57,28 @@ function logWin() {
 app.on('ready', () => {
   logger.info('main@app-ready')
   appTray = components.appTray()
-  appTray.on('click', () => keyWin())
-  danmuWin()
-  keyWin()
+  appTray.on('click', () => activatekeyWin())
+  activateDanmuWin()
+  activatekeyWin()
 })
 app.on('activate', () => {
   logger.info('main@app-activate')
-  danmuWin()
-  keyWin()
+  activateDanmuWin()
+  activatekeyWin()
+})
+app.on('will-quit', () => {
+  // send SIGTERM to child process
+  if (!server.killed) server.kill()
+  if (!createRoom.killed) createRoom.kill()
 })
 
 // IPC listener
 ipcMain.on('ask-for-key', (event, message) => event.sender.send('key-is', roomKey))
-ipcMain.on('open-log', (event, message) => {
-  logWin()
-})
+ipcMain.on('open-log', (event, message) => activatelogWin())
 ipcMain.on('quit-app', (event, message) => {
   logger.info('main@quit-app')
   exitApp()
 })
-
 
 // Child process listener
 server.on('message', (message) => {
