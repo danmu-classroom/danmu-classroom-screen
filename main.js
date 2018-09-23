@@ -12,7 +12,7 @@ const {
 let appTray = null
 const wins = {
   danmu: null,
-  key: null,
+  dashboard: null,
   log: null
 }
 let roomKey = null
@@ -43,9 +43,9 @@ function activateDanmuWin() {
   if (wins.danmu === null) wins.danmu = components.danmuWin()
 }
 
-function activatekeyWin() {
-  if (wins.key === null) wins.key = components.keyWin()
-  if (!wins.key.isVisible()) wins.key.show()
+function activateDashboardWin() {
+  if (wins.dashboard === null) wins.dashboard = components.dashboardWin()
+  if (!wins.dashboard.isVisible()) wins.dashboard.show()
 }
 
 function activatelogWin() {
@@ -60,15 +60,15 @@ app.on('ready', () => {
   appTray.on('click', () => {
     logger.info('appTray@click')
     activateDanmuWin()
-    activatekeyWin()
+    activateDashboardWin()
   })
   activateDanmuWin()
-  activatekeyWin()
+  activateDashboardWin()
 })
 app.on('activate', () => {
   logger.info('main@app-activate')
   activateDanmuWin()
-  activatekeyWin()
+  activateDashboardWin()
 })
 app.on('will-quit', () => {
   // send SIGTERM to child process
@@ -78,6 +78,7 @@ app.on('will-quit', () => {
 
 // IPC listener
 ipcMain.on('ask-for-key', (event, message) => event.sender.send('key-is', roomKey))
+ipcMain.on('change-config', (event, message) => wins.danmu.webContents.send('change-config', message))
 ipcMain.on('open-log', (event, message) => activatelogWin())
 ipcMain.on('quit-app', (event, message) => {
   logger.info('main@quit-app')
@@ -94,6 +95,6 @@ createRoom.on('message', (message) => {
   if (message.status === 'ok') { // ngrok connected
     roomKey = String(message.key)
     wins.danmu.webContents.send('key-is', roomKey)
-    wins.key.webContents.send('key-is', roomKey)
+    wins.dashboard.webContents.send('key-is', roomKey)
   }
 })
