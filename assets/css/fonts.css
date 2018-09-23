@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 瀨戶字體;
+  src: url(../fonts/setofont.ttf) format("opentype");
+}
+
+@font-face {
+  font-family: 思源柔黑體;
+  src: url(../fonts/GenJyuuGothicX-Medium.ttf) format("opentype");
+}
+
+@font-face {
+  font-family: 思源黑體;
+  src: url(../fonts/NotoSansCJKtc-Medium.ttf) format("opentype");
+}
