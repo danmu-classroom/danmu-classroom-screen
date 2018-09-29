@@ -1,4 +1,4 @@
-const logFile = path.join(paths.log, 'danmu.log')
+const logFile = path.join(paths.log, 'app.log')
 const logStream = new tail.Tail(logFile, {
   useWatchFile: true
 })
@@ -40,8 +40,6 @@ function logScrollButtom() {
 }
 
 $(document).ready(() => {
-  logger.info(`${thisFilename}Win@ready`)
-
   logStream.on("line", function(data) {
     addNewLog(data)
     logScrollButtom()

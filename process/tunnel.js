@@ -15,9 +15,7 @@ const createRoomUrl = url.resolve(danmuServer, 'rooms')
 
 async function initNgrok(portNumber) {
   const ngrokUrl = await ngrok.connect(portNumber)
-
-  logger.info(`process@create-room@ngrok-connected tunnel: ${ngrokUrl}`)
-
+  logger.info(`tunnel@tunnel up, url: ${ngrokUrl}`)
   return ngrokUrl
 }
 
@@ -33,9 +31,7 @@ async function initRoom(webhook) {
     headers: jsonHeader
   })
   const json = await response.json()
-
-  logger.info(`process@create-room@room-created key: ${json.key}`)
-
+  logger.info(`tunnel@room created, room key: ${json.key}`)
   return json
 }
 
@@ -62,11 +58,11 @@ createRoom(localServer.port, localServer.webhookPath).then(
       status: 'error',
       error: err
     })
-    logger.error(`process@create-room@error ${err}`)
+    logger.error(`tunnel@error: ${err}`)
   })
 
 // kill process
 process.on('SIGTERM', () => {
-  logger.info('process@create-room@SIGTERM')
+  logger.info('tunnel@SIGTERM')
   process.exit(0)
 })

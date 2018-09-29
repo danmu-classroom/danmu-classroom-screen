@@ -32,10 +32,7 @@ function lessDanmuTrackID() {
 }
 
 $(document).ready(() => {
-  logger.info(`${thisFilename}Win@ready`)
-  // ask key
-  ipcRenderer.send('ask-for-key')
-  logger.info(`${thisFilename}Win@ask-for-key`)
+  ipcRenderer.send('ask-for-room-key') // ask room key
   // init danmu
   addDanmu({
     content: 'Danmu Classroom launched.'
@@ -43,19 +40,14 @@ $(document).ready(() => {
 })
 
 // IPC listener
-ipcRenderer.on('paint-danmu', (event, message) => { // paint danmu
-  addDanmu(message)
-  logger.info(`${thisFilename}Win@danmu-painted danmu = ${JSON.stringify(message)}`)
+ipcRenderer.on('paint-danmu', (event, message) => {
+  addDanmu(message) // paint danmu
+  logger.info(`app@danmu painted: ${JSON.stringify(message)}`)
 })
-ipcRenderer.on('key-is', (event, key) => { // update key
-  $("#key").text(key)
-  logger.info(`${thisFilename}Win@key-rendered key = ${key}`)
-})
+ipcRenderer.on('update-room-key', (event, key) => $('#key').text(key)) // update key
 ipcRenderer.on('change-config', (event, message) => { // change config
-  const danmus = $('.danmu')
   config.danmu = message.danmu
   config.track = message.track
-  danmus.css(message.danmu)
+  $('.danmu').css(message.danmu)
   tracks.css(message.track)
-  logger.info(`${thisFilename}Win@config-changed config = ${JSON.stringify(message)}`)
 })

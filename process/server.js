@@ -29,14 +29,13 @@ app.post(localServer.webhookPath, (req, res) => { // danmu received
   }
   res.json(body)
   process.send(body)
-  logger.info(`process@server@danmu-received ${JSON.stringify(req.body)}`)
 })
 
 // Express server up
-app.listen(localServer.port, () => logger.info(`process@server@express-up port: ${localServer.port}`))
+app.listen(localServer.port, logger.info(`server@server up, listening port: ${localServer.port}`))
 
 // Kill process
 process.on('SIGTERM', () => {
-  logger.info('process@server@SIGTERM')
+  logger.info('server@SIGTERM')
   process.exit(0)
 })

@@ -33,6 +33,17 @@
         </div>
       </div>
       <div class="card m-2">
+        <div class="card-header">發送彈幕</div>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="請輸入想發送的彈幕內容" id="test-danmu">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" type="button" id="send-btn">送出</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card m-2">
         <div class="card-header">設定</div>
         <div class="card-body">
           <form>
@@ -70,25 +81,26 @@
             </div>
           </form>
         </div>
-
       </div>
       <div class="card m-2 bg-info">
-        <div class="card-header">測試彈幕
-          <button type="button" class="btn btn-success" id="test-btn">測試</button>
+        <div class="card-header">彈幕示例
+          <button type="button" class="btn btn-primary" id="test-btn">重試</button>
         </div>
         <div class="card-body" id="screen">
           <div class="track row w-100">
-            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕發射囉~~~~~~~~~~~~~</p>
-            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕發射囉~~~~~~~~~~~~~</p>
+            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕1發射囉~~~~~~~~~~~~~</p>
           </div>
           <div class="track row w-100">
-            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕發射囉~~~~~~~~~~~~~</p>
+            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕2發射囉~~~~~~~~~~~~~</p>
+          </div>
+          <div class="track row w-100">
+            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕3發射囉~~~~~~~~~~~~~</p>
           </div>
         </div>
       </div>
     </div>
     <script src="../assets/js/_common.js" charset="utf-8"></script>
-    <script src="../assets/js/ctrl.js" charset="utf-8"></script>
+    <script src="../assets/js/dashboard.js" charset="utf-8"></script>
   </body>
 
 </html>

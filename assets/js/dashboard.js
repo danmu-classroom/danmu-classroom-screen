@@ -1,28 +1,24 @@
 $(document).ready(() => {
-  logger.info(`${thisFilename}Win@ready`)
-
-  // IPC listener
-  ipcRenderer.send('ask-for-key') // ask key
-  logger.info('view@ctrl@ask-for-key')
+  ipcRenderer.send('ask-for-room-key') // ask key
 
   const logBtn = $("#log-btn")
   const hideBtn = $("#hide-btn")
   const quitBtn = $("#quit-btn")
+  const sendBtn = $("#send-btn")
   const testBtn = $("#test-btn")
   const examples = $('.example-danmu')
   const tracks = $('.track')
 
   // Buttons linstener
-  logBtn.on('click', () => {
-    ipcRenderer.send('open-log')
-    logger.info(`${thisFilename}Win@open-log`)
-  })
-  hideBtn.on('click', () => {
-    thisWindow.hide()
-  })
-  quitBtn.on('click', () => {
-    ipcRenderer.send('quit-app')
-    logger.info(`${thisFilename}Win@quit-app`)
+  logBtn.on('click', () => ipcRenderer.send('open-log-win'))
+  hideBtn.on('click', () => thisWindow.hide())
+  quitBtn.on('click', () => ipcRenderer.send('quit-app'))
+  sendBtn.on('click', () => {
+    const message = {
+      content: $('#test-danmu').val()
+    }
+    $('#test-danmu').val(null)
+    ipcRenderer.send('send-test-danmu', message)
   })
   testBtn.on('click', () => {
     // restart css animation
@@ -53,11 +49,8 @@ $(document).ready(() => {
     examples.css(config.danmu)
     tracks.css(config.track)
     ipcRenderer.send('change-config', config)
-    logger.info(`${thisFilename}Win@config-change config = ${JSON.stringify(config)}`)
   });
 })
 
-ipcRenderer.on('key-is', (event, key) => { // update key
-  $("#key").text(key)
-  logger.info(`${thisFilename}Win@key-rendered key: ${key}`)
-})
+// IPC listener
+ipcRenderer.on('update-room-key', (event, key) => $("#key").text(key)) // update key

@@ -24,5 +24,4 @@ window.onbeforeunload = (event) => {
 // User input listener
 mousetrap.bind(['command+alt+i', 'ctrl+shift+i'], function() {
   thisWindow.openDevTools() // open devtools
-  logger.info(`${thisFilename}Win@open-devtools`)
 })
