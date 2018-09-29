@@ -10,8 +10,9 @@
   animation-fill-mode: forwards;
   animation-duration: 20s;
   font-size: 2.5rem;
-  color: #000;
   position: absolute;
+  -webkit-text-stroke: 1px #000;
+  -webkit-text-fill-color: #fff;
 }
 
 .track {
