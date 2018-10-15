@@ -5,10 +5,5 @@
 
 @font-face {
   font-family: 思源柔黑體;
-  src: url(../fonts/GenJyuuGothicX-Medium.ttf) format("opentype");
-}
-
-@font-face {
-  font-family: 思源黑體;
-  src: url(../fonts/NotoSansCJKtc-Medium.ttf) format("opentype");
+  src: url(../fonts/GenJyuuGothic-Bold.ttf) format("opentype");
 }
