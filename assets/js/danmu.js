@@ -1,53 +1,95 @@
-let config = {
-  danmu: {},
-  track: {}
+// setup canvas
+const cvs = document.getElementById('canvas')
+const ctx = cvs.getContext('2d')
+cvs.width = window.innerWidth
+cvs.height = window.innerHeight
+
+// danmu config
+const danmus = []
+const danmusConfig = {
+  speed: 5000, // 5000ms
+  fontFamily: '思源柔黑體',
+  fontSize: 100, // 100px
+  color: '#fff',
+  strokeColor: '#000',
+  strokeWidth: 3, // 3px
 }
-const tracks = $('.track')
 
-function addDanmu(message) {
-  const danmu = $("<div></div>")
-  danmu.addClass("danmu")
-  danmu.text(message.content) // NOTE: xss fixed, do not use innerHtml for unsafe input
-  danmu.on("animationend", () => danmu.remove()) // danmu animation end then destroy it
-  danmu.css(config.danmu)
+function draw() {
+  let now = Date.now()
 
-  // paint danmu to the track which have less danmu
-  danmu.appendTo(tracks[lessDanmuTrackID()]) // paint to screen
-}
+  // apply config to canvas
+  ctx.clearRect(0, 0, cvs.width, cvs.height) // clear canvas
+  ctx.font = `${danmusConfig.fontSize}px ${danmusConfig.fontFamily}`;
+  ctx.fillStyle = danmusConfig.color
+  ctx.strokeStyle = danmusConfig.strokeColor
+  ctx.lineWidth = danmusConfig.strokeWidth
 
-// return the track index of tracks which have less danmu
-function lessDanmuTrackID() {
-  let minDanmuCounts = tracks[0].children.length
-  let theTrackID = 0
-  $.each(tracks, function(idx, track) {
-    console.log(track.children.length < minDanmuCounts);
-    if (track.children.length < minDanmuCounts) {
-      minDanmuCounts = track.children.length
-      theTrackID = idx
-      console.log(minDanmuCounts);
-      console.log(theTrackID);
+  danmus.forEach((value, index) => {
+    value.x = cvs.width - cvs.width * (now - value.initTime) / danmusConfig.speed // compute and update danmu's x
+    if ((value.x + value.width) > 0) {
+      // painting danmu
+      ctx.fillText(value.content, value.x, value.y)
+      ctx.strokeText(value.content, value.x, value.y)
+    } else {
+      // danmu is ending, remove it
+      danmus.splice(index, 1)
     }
   })
-  return theTrackID;
+
+  // use recursive to update canvas
+  window.requestAnimationFrame(draw)
 }
+
+function addDanmu(content) {
+  let danmu = {
+    content: content,
+    x: cvs.width,
+    y: Math.floor(Math.random() * cvs.height),
+    initTime: Date.now(),
+    width: ctx.measureText(content).width
+  }
+  danmus.push(danmu)
+}
+
+// auto create danmus
+function danmusSimulation() {
+  let counter = 1
+
+  function nextDanmu() {
+    let randSec = Math.floor(Math.random() * 10000)
+    console.log(randSec)
+    setTimeout(() => {
+      addDanmu(`我來報數拉 ${counter}`)
+      counter += 1
+      nextDanmu()
+    }, randSec)
+  }
+
+  nextDanmu()
+}
+
+// resize canvas to full window
+window.addEventListener('resize', () => {
+  cvs.width = window.innerWidth
+  cvs.height = window.innerHeight
+})
 
 $(document).ready(() => {
   ipcRenderer.send('ask-for-room-key') // ask room key
-  // init danmu
-  addDanmu({
-    content: 'Danmu Classroom launched.'
-  })
+  addDanmu('Danmu Classroom launched.') // send a danmu
+  danmusSimulation()
+  window.requestAnimationFrame(draw)
 })
 
 // IPC listener
 ipcRenderer.on('paint-danmu', (event, message) => {
-  addDanmu(message) // paint danmu
-  logger.info(`app@danmu painted: ${JSON.stringify(message)}`)
+  addDanmu(message.content)
+  logger.info(`app@danmu painted: ${JSON.stringify(message.content)}`)
 })
 ipcRenderer.on('update-room-key', (event, key) => $('#key').text(key)) // update key
 ipcRenderer.on('change-config', (event, message) => { // change config
-  config.danmu = message.danmu
-  config.track = message.track
-  $('.danmu').css(message.danmu)
-  tracks.css(message.track)
+  danmusConfig.speed = message.speed
+  danmusConfig.fontFamily = message.fontFamily
+  danmusConfig.fontSize = message.fontSize
 })

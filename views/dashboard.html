@@ -8,29 +8,24 @@
     <title>彈幕教室</title>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/fonts.css">
-    <link rel="stylesheet" href="../assets/css/danmu.css">
   </head>
 
   <body>
     <div class="container">
       <h1 class="text-center" id="title">彈幕教室</h1>
-      <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-success" id="log-btn">紀錄</button>
-        <button type="button" class="btn btn-warning ml-2" id="hide-btn">隱藏此視窗</button>
-        <button type="button" class="btn btn-danger ml-2" id="quit-btn">關閉應用程式</button>
-      </div>
-
-      <div class="card m-2">
-        <div class="card-header">房號</div>
-        <div class="card-body">
-          <p class="d-flex align-items-center">4 位數字<span id="key" class="text-muted ml-auto"></span></p>
-        </div>
+      <h2 class="text-center">房號
+        <span id="key" class="ml-2 text-muted"></span>
+      </h2>
+      <div class="d-flex flex-wrap">
+        <button type="button" class="btn btn-warning ml-auto" id="hide-btn">隱藏</button>
+        <button type="button" class="btn btn-danger ml-2" id="quit-btn">結束</button>
       </div>
       <div class="card m-2">
-        <div class="card-header">Line Bot QRCode</div>
+        <div class="card-header">Line Bot</div>
         <div class="card-body">
-          <img src="../assets/img/line-bot-qr.png" class="rounded mx-auto d-block" alt="line-bot-qr">
+          <p class="card-title">掃 QR Code</p>
         </div>
+        <img src="../assets/img/line-bot-qr.png" class="card-img-bottom mx-auto" alt="line-bot-qr" style="max-width: 400px;">
       </div>
       <div class="card m-2">
         <div class="card-header">發送彈幕</div>
@@ -50,39 +45,20 @@
             <div class="form-group row">
               <label for="config-font-family" class="col">字型</label>
               <select class="form-control col" id="config-font-family" name="config-font-family">
-                <option value="思源柔黑體" selected>思源柔黑體</option>
+                <option value="思源柔黑體" selected="selected">思源柔黑體</option>
                 <option value="瀨戶字體">瀨戶字體</option>
               </select>
             </div>
             <div class="form-group row">
-              <label for="config-font-size" class="col">字體大小</label>
-              <input type="range" class="form-control-range col" id="config-font-size" min="0.5" max="4" value="2.5" step="0.1" name="config-font-size">
+              <label for="config-font-size" class="col">字體大小(px)</label>
+              <input type="range" class="form-control-range col" id="config-font-size" min="16" max="200" value="100" step="1" name="config-font-size">
             </div>
             <div class="form-group row">
-              <label for="config-danmu-speed" class="col">彈幕速度（秒）</label>
-              <input type="range" class="form-control-range col" id="config-danmu-speed" min="1" max="100" value="20" step="1" name="config-danmu-speed">
-            </div>
-            <div class="form-group row">
-              <label for="config-track-height" class="col">彈幕軌道高度</label>
-              <input type="range" class="form-control-range col" id="config-track-height" min="10" max="200" value="50" step="1" name="config-track-height">
+              <label for="config-danmu-speed" class="col">彈幕速度(ms)</label>
+              <input type="range" class="form-control-range col" id="config-danmu-speed" min="2000" max="20000" value="5000" step="200" name="config-danmu-speed">
             </div>
           </form>
-        </div>
-      </div>
-      <div class="card m-2 bg-info">
-        <div class="card-header">彈幕示例
-          <button type="button" class="btn btn-primary" id="test-btn">重試</button>
-        </div>
-        <div class="card-body" id="screen">
-          <div class="track row w-100">
-            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕1發射囉~~~~~~~~~~~~~</p>
-          </div>
-          <div class="track row w-100">
-            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕2發射囉~~~~~~~~~~~~~</p>
-          </div>
-          <div class="track row w-100">
-            <p class="danmu example-danmu" contenteditable="true">測試的範例彈幕3發射囉~~~~~~~~~~~~~</p>
-          </div>
+          <button type="button" class="btn btn-secondary btn-sm btn-block" id="log-btn">開啟 Log 檔</button>
         </div>
       </div>
     </div>
