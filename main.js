@@ -5,15 +5,15 @@ const components = require(path.join(paths.lib, 'components'))
 const logger = require(path.join(paths.lib, 'logger'))
 const {
   app,
-  ipcMain
+  ipcMain,
+  shell
 } = require('electron')
 
 // Global references
 let appTray = null
 const wins = {
   danmu: null,
-  dashboard: null,
-  log: null
+  dashboard: null
 }
 let roomKey = null
 
@@ -50,10 +50,7 @@ app.on('will-quit', () => {
 // IPC listener
 ipcMain.on('ask-for-room-key', (event, message) => event.sender.send('update-room-key', roomKey))
 ipcMain.on('change-config', (event, message) => wins.danmu.webContents.send('change-config', message))
-ipcMain.on('open-log-win', (event, message) => {
-  if (wins.log === null) wins.log = components.logWin()
-  if (!wins.log.isVisible()) wins.log.show()
-})
+ipcMain.on('open-log-win', (event, message) => shell.showItemInFolder(path.join(paths.log, 'app.log')))
 ipcMain.on('send-test-danmu', (event, message) => wins.danmu.webContents.send('paint-danmu', message))
 ipcMain.on('quit-app', (event, message) => exitApp())
 

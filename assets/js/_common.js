@@ -1,7 +1,5 @@
 const path = require('path')
-const fs = require('fs')
 const mousetrap = require('mousetrap')
-const tail = require('tail')
 const {
   ipcRenderer,
   remote
