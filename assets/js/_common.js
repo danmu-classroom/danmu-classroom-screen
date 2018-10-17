@@ -1,5 +1,4 @@
 const path = require('path')
-const mousetrap = require('mousetrap')
 const {
   ipcRenderer,
   remote
@@ -18,8 +17,3 @@ window.onbeforeunload = (event) => {
   thisWindow.hide()
   event.returnValue = false
 }
-
-// User input listener
-mousetrap.bind(['command+alt+i', 'ctrl+shift+i'], function() {
-  thisWindow.openDevTools() // open devtools
-})
