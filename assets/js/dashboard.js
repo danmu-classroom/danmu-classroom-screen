@@ -1,12 +1,28 @@
 const logBtn = $("#log-btn")
-const hideBtn = $("#hide-btn")
-const quitBtn = $("#quit-btn")
 const sendBtn = $("#send-btn")
+const offlineBtn = $("#connection-offline")
+const onlineBtn = $("#connection-online")
+const connectingBtn = $("#connection-connecting")
 
-// Buttons linstener
+function connectionStatus(status) {
+  if (status == 'online') {
+    onlineBtn.removeClass('d-none')
+    offlineBtn.addClass('d-none')
+    connectingBtn.addClass('d-none')
+  } else if (status == 'connecting') {
+    connectingBtn.removeClass('d-none')
+    offlineBtn.addClass('d-none')
+    onlineBtn.addClass('d-none')
+  } else if (status == 'offline') {
+    offlineBtn.removeClass('d-none')
+    connectingBtn.addClass('d-none')
+    onlineBtn.addClass('d-none')
+  }
+}
+
+// DOM linsteners
 logBtn.on('click', () => ipcRenderer.send('open-log-win'))
-hideBtn.on('click', () => thisWindow.hide())
-quitBtn.on('click', () => ipcRenderer.send('quit-app'))
+window.onbeforeunload = (event) => ipcRenderer.send('quit-app')
 sendBtn.on('click', () => {
   const message = {
     content: $('#test-danmu').val()
@@ -14,8 +30,7 @@ sendBtn.on('click', () => {
   $('#test-danmu').val(null)
   ipcRenderer.send('send-test-danmu', message)
 })
-
-// Form linstener
+offlineBtn.on('click', () => ipcRenderer.send('reconnect'))
 $('input[name^=config-], select[name^=config-]').change(function() {
   let fontFamily = $('#config-font-family').val()
   let fontSize = $('#config-font-size').val()
@@ -27,8 +42,13 @@ $('input[name^=config-], select[name^=config-]').change(function() {
   }
   ipcRenderer.send('change-config', danmuConfig)
 })
+window.addEventListener('offline', () => connectionStatus('offline'))
 
 $(document).ready(() => ipcRenderer.send('ask-for-room-key')) // Ask for key
 
 // IPC listener
-ipcRenderer.on('update-room-key', (event, key) => $("#key").text(key)) // update key
+ipcRenderer.on('update-room-key', (event, key) => {
+  connectionStatus('online')
+  $("#key").text(key) // update key
+})
+ipcRenderer.on('connecting', (event, message) => connectionStatus('connecting'))

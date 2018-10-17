@@ -11,22 +11,32 @@
   </head>
 
   <body>
-    <div class="container">
-      <h1 class="text-center" id="title">彈幕教室</h1>
-      <h2 class="text-center">房號
-        <span id="key" class="ml-2 text-muted"></span>
-      </h2>
-      <div class="d-flex flex-wrap">
-        <button type="button" class="btn btn-warning ml-auto" id="hide-btn">隱藏</button>
-        <button type="button" class="btn btn-danger ml-2" id="quit-btn">結束</button>
-      </div>
-      <div class="card m-2">
-        <div class="card-header">Line Bot</div>
-        <div class="card-body">
-          <p class="card-title">掃 QR Code</p>
+
+    <div class="jumbotron h-100">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm d-flex flex-wrap align-items-center mb-3">
+            <h1 class="display-2 d-flex flex-wrap align-items-center mx-auto">
+              <img src="../assets/img/icon.png" width="150" height="150" class="mr-2">
+              彈幕教室
+            </h1>
+            <div class="w-100"></div>
+            <img src="../assets/img/line-bot-qr.png" class="img-fluid mx-auto">
+          </div>
+          <div class="col-sm d-flex flex-wrap align-items-center mb-3">
+            <ol>
+              <li class="lead">掃瞄 QR Code 加入好友</li>
+              <li class="lead">輸入房號
+                <span id="key" class="ml-2 text-warning display-2"></span>
+              </li>
+              <li class="lead">暢所欲言</li>
+            </ol>
+          </div>
         </div>
-        <img src="../assets/img/line-bot-qr.png" class="card-img-bottom mx-auto" alt="line-bot-qr" style="max-width: 400px;">
       </div>
+    </div>
+
+    <div class="container">
       <div class="card m-2">
         <div class="card-header">發送彈幕</div>
         <div class="card-body">
@@ -62,6 +72,13 @@
         </div>
       </div>
     </div>
+
+    <div class="fixed-top d-flex">
+      <button type="button" class="btn btn-warning ml-auto" id="connection-connecting">connecting...</button>
+      <button type="button" class="btn btn-secondary ml-auto d-none" id="connection-offline">offline</button>
+      <button type="button" class="btn btn-success ml-auto d-none" id="connection-online">online</button>
+    </div>
+
     <script src="../assets/js/_common.js" charset="utf-8"></script>
     <script src="../assets/js/dashboard.js" charset="utf-8"></script>
   </body>
