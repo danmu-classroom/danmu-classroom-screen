@@ -6,7 +6,8 @@ const logger = require(path.join(paths.lib, 'logger'))
 const {
   app,
   ipcMain,
-  shell
+  shell,
+  globalShortcut
 } = require('electron')
 
 // Global references
@@ -37,7 +38,10 @@ app.on('ready', () => {
   appTray = components.appTray()
   wins.danmu = components.danmuWin()
   wins.dashboard = components.dashboardWin()
+  // setup appTray
   appTray.on('click', () => wins.dashboard.show())
+  // setup global shortcut
+  globalShortcut.register('CmdOrCtrl+Alt+I', () => wins.danmu.openDevTools())
 })
 app.on('activate', () => wins.dashboard.show())
 app.on('will-quit', () => {
