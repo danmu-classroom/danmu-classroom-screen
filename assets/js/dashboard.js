@@ -40,6 +40,7 @@ $('input[name^=config-], select[name^=config-]').change(function() {
     fontFamily: fontFamily,
     speed: danmuSpeed
   }
+  $('body').css('font-family', fontFamily)
   ipcRenderer.send('change-config', danmuConfig)
 })
 window.addEventListener('offline', () => connectionStatus('offline'))
