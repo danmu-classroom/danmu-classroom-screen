@@ -49,7 +49,7 @@ app.on('ready', () => {
   // setup appTray
   appTray.on('click', () => wins.dashboard.show())
   // setup global shortcut
-  globalShortcut.register('CmdOrCtrl+Alt+I', () => wins.danmu.openDevTools())
+  globalShortcut.register('CmdOrCtrl+Alt+I', () => wins.dashboard.openDevTools())
   globalShortcut.register('CmdOrCtrl+R', () => reconnectTunnel())
 })
 app.on('activate', () => wins.dashboard.show())
