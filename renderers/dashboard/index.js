@@ -6,7 +6,7 @@ const {
 const {
   folder,
   filename
-} = remote.require('../config').folder
+} = remote.require('../config')
 
 const danmuWin = remote.getGlobal('wins').danmu
 const displays = remote.getGlobal('displays')
