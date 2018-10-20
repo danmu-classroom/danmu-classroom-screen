@@ -1,7 +1,7 @@
 {
   "name": "danmu-classroom-screen",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "main/app.js",
   "author": "楊竑昕 <jk195417@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -9,9 +9,9 @@
     "clean-log": "rm -rf ./log",
     "clean-releases": "rm -rf ./releases",
     "clean": "yarn clean-log && yarn clean-releases",
-    "build-osx": "electron-packager . --out=./releases --platform=darwin --icon=assets/img/icon",
-    "build-win32": "electron-packager . --out=./releases --platform=win32 --arch=ia32 --icon=assets/img/icon",
-    "build-win64": "electron-packager . --out=./releases --platform=win32 --arch=x64 --icon=assets/img/icon",
+    "build-osx": "electron-packager . --out=./releases --platform=darwin --icon=public/img/icon",
+    "build-win32": "electron-packager . --out=./releases --platform=win32 --arch=ia32 --icon=public/img/icon",
+    "build-win64": "electron-packager . --out=./releases --platform=win32 --arch=x64 --icon=public/img/icon",
     "build-all": "yarn clean-log && yarn clean-releases && yarn build-osx && yarn build-win32 && yarn build-win64"
   },
   "dependencies": {

@@ -12,12 +12,12 @@ const {
 
 // Global references
 let appTray = null
-const wins = {
+const wins = global.wins = {
   danmu: null,
   dashboard: null
 }
-let roomKey = null
-let roomToken = ''
+let roomKey = global.roomKey = null
+let roomToken = global.roomToken = ''
 
 // Child process
 const server = child_process.fork(path.join(paths.proc, 'server.js')) // run express server
@@ -62,8 +62,8 @@ app.on('will-quit', () => {
 
 // IPC listener
 ipcMain.on('ask-for-room-key', (event, message) => event.sender.send('update-room-key', roomKey))
+ipcMain.on('ask-for-wins', (event, message) => event.sender.send('get-wins', wins))
 ipcMain.on('change-config', (event, message) => wins.danmu.webContents.send('change-config', message))
-ipcMain.on('open-log-win', (event, message) => shell.showItemInFolder(path.join(paths.log, 'app.log')))
 ipcMain.on('send-test-danmu', (event, message) => wins.danmu.webContents.send('paint-danmu', message))
 ipcMain.on('reconnect', (event, message) => reconnectTunnel())
 ipcMain.on('quit-app', (event, message) => exitApp())

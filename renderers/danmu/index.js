@@ -1,3 +1,13 @@
+const {
+  ipcRenderer,
+  remote
+} = require('electron')
+const {
+  folder,
+  danmu
+} = remote.require('../config')
+const logger = remote.require('./logger')
+
 // setup canvas
 const cvs = document.getElementById('canvas')
 const ctx = cvs.getContext('2d')
@@ -7,12 +17,12 @@ cvs.height = window.innerHeight
 // danmu config
 const danmus = []
 const danmusConfig = {
-  speed: 5000, // 5000ms
-  fontFamily: '思源柔黑體',
-  fontSize: 100, // 100px
-  color: '#fff',
-  strokeColor: '#000',
-  strokeWidth: 3, // 3px
+  speed: danmu.default.speed,
+  fontFamily: danmu.default.fontFamily,
+  fontSize: danmu.default.fontSize,
+  color: danmu.default.color,
+  strokeColor: danmu.default.strokeColor,
+  strokeWidth: danmu.default.strokeWidth
 }
 
 function draw() {
@@ -50,6 +60,15 @@ function addDanmu(content) {
     width: ctx.measureText(content).width
   }
   danmus.push(danmu)
+  logger.info(`app@danmu painted: ${content}`)
+}
+
+function updateConfig(config) {
+  // update configs
+  if (config.speed != null) danmusConfig.speed = config.speed
+  if (config.fontFamily != null) danmusConfig.fontFamily = config.fontFamily
+  if (config.fontSize != null) danmusConfig.fontSize = config.fontSize
+  logger.info(`app@danmu config update: ${JSON.stringify(config)}`)
 }
 
 // auto create danmus
@@ -69,27 +88,19 @@ function danmusSimulation() {
   nextDanmu()
 }
 
-// resize canvas to full window
 window.addEventListener('resize', () => {
+  // resize canvas to full window
   cvs.width = window.innerWidth
   cvs.height = window.innerHeight
 })
-
+window.addEventListener('beforeunload', () => ipcRenderer.send('quit-app'))
 $(document).ready(() => {
-  ipcRenderer.send('ask-for-room-key') // ask room key
-  addDanmu('Danmu Classroom launched.') // send a danmu
-  danmusSimulation()
+  addDanmu('Danmu Classroom launched.')
+  // danmusSimulation()
   window.requestAnimationFrame(draw)
 })
 
 // IPC listener
-ipcRenderer.on('paint-danmu', (event, message) => {
-  addDanmu(message.content)
-  logger.info(`app@danmu painted: ${JSON.stringify(message.content)}`)
-})
-ipcRenderer.on('update-room-key', (event, key) => $('#key').text(key)) // update key
-ipcRenderer.on('change-config', (event, message) => { // change config
-  danmusConfig.speed = message.speed
-  danmusConfig.fontFamily = message.fontFamily
-  danmusConfig.fontSize = message.fontSize
-})
+ipcRenderer.on('danmu', (event, message) => addDanmu(message.content)) // paint danmu
+ipcRenderer.on('room-key-is', (event, key) => $('#key').text(key)) // update room key
+ipcRenderer.on('danmu-config-is', (event, config) => updateConfig(config)) // update config

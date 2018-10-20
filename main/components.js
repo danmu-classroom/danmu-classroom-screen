@@ -3,11 +3,9 @@ const url = require('url')
 const {
   BrowserWindow,
   Tray,
-  nativeImage,
-  globalShortcut
+  nativeImage
 } = require('electron')
-const paths = require(path.join(__dirname, '../config')).paths
-const logger = require(path.join(paths.lib, 'logger'))
+const folder = require(path.join(__dirname, '../config')).folder
 
 exports.danmuWin = () => {
   let win = new BrowserWindow({
@@ -18,7 +16,7 @@ exports.danmuWin = () => {
   win.setIgnoreMouseEvents(true)
   win.setAlwaysOnTop(true)
   win.loadURL(url.format({
-    pathname: path.join(paths.views, 'danmu.html'),
+    pathname: path.join(folder.renderers, 'danmu/index.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -32,7 +30,7 @@ exports.dashboardWin = () => {
   })
   win.maximize()
   win.loadURL(url.format({
-    pathname: path.join(paths.views, 'dashboard.html'),
+    pathname: path.join(folder.renderers, 'dashboard/index.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -40,7 +38,7 @@ exports.dashboardWin = () => {
 }
 
 exports.appTray = () => {
-  const icon = nativeImage.createFromPath(path.join(paths.assets, 'img/icon.png')).resize({
+  const icon = nativeImage.createFromPath(path.join(folder.public, 'img/icon.png')).resize({
     width: 32,
     height: 32
   })

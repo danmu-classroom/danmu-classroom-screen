@@ -3,21 +3,20 @@ const url = require('url')
 const fetch = require('node-fetch')
 const ngrok = require('ngrok')
 const {
-  paths,
-  localServer,
-  danmuServer
+  folder,
+  server
 } = require(path.join(__dirname, '../config'))
-const logger = require(path.join(paths.lib, 'logger'))
+const logger = require(path.join(folder.main, 'logger'))
+
 const jsonHeader = {
   'Content-Type': 'application/json; charset=utf-8'
 }
-
 let roomKey = null
 let roomToken = null
 let tunnelURL = null
 
-async function createTunnel(portNumber) {
-  const ngrokURL = await ngrok.connect(portNumber)
+async function createTunnel(localPort) {
+  const ngrokURL = await ngrok.connect(localPort)
   tunnelURL = ngrokURL
   logger.info(`tunnel@tunnel up, url: ${ngrokURL}`)
   return ngrokURL
@@ -30,21 +29,21 @@ async function createRoom(webhook) {
     }
   }
   // POST https://danmu-classroom.herokuapp.com/rooms
-  const response = await fetch(url.resolve(danmuServer, 'rooms'), {
+  const response = await fetch(url.resolve(server.danmu, 'rooms'), {
     method: 'POST',
     body: JSON.stringify(body),
     headers: jsonHeader
   })
-  const json = await response.json()
-  roomToken = json.auth_token
-  roomKey = json.key
-  logger.info(`tunnel@room created, room key: ${json.key}`)
-  return json
+  const result = await response.json()
+  roomToken = result.auth_token
+  roomKey = result.key
+  logger.info(`tunnel@room created, room key: ${result.key}`)
+  return result
 }
 
-async function initService(portNumber, webhookPath) {
-  const tunnel = await createTunnel(portNumber)
-  const webhook = url.resolve(tunnel, webhookPath)
+async function initService(localPort, localPath) {
+  const tunnel = await createTunnel(localPort)
+  const webhook = url.resolve(tunnel, localPath)
   const room = await createRoom(webhook)
   return room
 }
@@ -57,30 +56,30 @@ async function updateRoom(webhook) {
     auth_token: roomToken
   }
   // POST https://danmu-classroom.herokuapp.com/rooms/${roomKey}
-  const response = await fetch(url.resolve(danmuServer, `rooms/${roomKey}`), {
+  const response = await fetch(url.resolve(server.danmu, `rooms/${roomKey}`), {
     method: 'PATCH',
     body: JSON.stringify(body),
     headers: jsonHeader
   })
-  const json = await response.json()
+  const result = await response.json()
   logger.info("tunnel@room webhook updated")
-  return json
+  return result
 }
 
-async function recreateTunnel(portNumber) {
+async function recreateTunnel(localPort) {
   ngrok.disconnect() // disconnect all ngrok service on this computer
-  const ngrokURL = await createTunnel(portNumber)
+  const ngrokURL = await createTunnel(localPort)
   return ngrokURL
 }
 
-async function reconnectService(portNumber, webhookPath) {
-  const tunnel = await recreateTunnel(portNumber)
-  const webhook = url.resolve(tunnel, webhookPath)
+async function reconnectService(localPort, localPath) {
+  const tunnel = await recreateTunnel(localPort)
+  const webhook = url.resolve(tunnel, localPath)
   const room = await updateRoom(webhook)
   return room
 }
 
-initService(localServer.port, localServer.webhookPath).then(
+initService(server.local.port, server.local.webhook).then(
   (room) => { // task done
     process.send({
       status: 'ok',
@@ -98,7 +97,7 @@ initService(localServer.port, localServer.webhookPath).then(
 // reconnect
 process.on('message', (message) => {
   if (message.action == 'reconnect') {
-    reconnectService(localServer.port, localServer.webhookPath).then(
+    reconnectService(server.local.port, server.local.webhook).then(
       (room) => { // task done
         process.send({
           status: 'ok',
