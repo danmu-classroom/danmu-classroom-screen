@@ -23,6 +23,13 @@ global.roomToken = ''
 const server = child_process.fork(path.join(folder.childProcesses, 'server.js')) // run local server
 const tunnel = child_process.fork(path.join(folder.childProcesses, 'tunnel.js')) // fetch ngrok and room
 
+function reconnectTunnel() {
+  tunnel.send({
+    action: 'reconnect'
+  })
+  wins.dashboard.webContents.send('connecting')
+}
+
 // App listeners
 app.on('ready', () => {
   // require electron modules after app ready
@@ -53,12 +60,7 @@ app.on('will-quit', () => {
 })
 
 // IPC listeners
-ipcMain.on('reconnect-tunnel', (event, message) => {
-  event.sender.send('reconnect-tunnel')
-  tunnel.send({
-    action: 'reconnect'
-  })
-})
+ipcMain.on('reconnect-tunnel', (event, message) => reconnectTunnel())
 ipcMain.on('quit-app', (event, message) => {
   // close all windows
   for (let key in global.wins) {

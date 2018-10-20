@@ -90,4 +90,4 @@ ipcRenderer.on('room-key-is', (event, key) => {
   connectionStatus('online')
   $("#key").text(key) // update key
 })
-ipcRenderer.on('reconnect-tunnel', (event, key) => connectionStatus('connecting'))
+ipcRenderer.on('connecting', (event, key) => connectionStatus('connecting'))
