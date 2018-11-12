@@ -1,11 +1,13 @@
 const path = require('path')
+const url = require('url')
 const {
   ipcRenderer,
   remote
 } = require('electron')
 const {
   folder,
-  filename
+  filename,
+  server
 } = remote.require('../config')
 
 const danmuWin = remote.getGlobal('wins').danmu
@@ -15,6 +17,7 @@ const sendBtn = $("#send-btn")
 const offlineBtn = $("#connection-offline")
 const onlineBtn = $("#connection-online")
 const connectingBtn = $("#connection-connecting")
+const loginBtn = $("#user-login")
 
 function connectionStatus(status) {
   if (status == 'online') {
@@ -50,13 +53,41 @@ function sendTestDanmu() {
   return message
 }
 
-// DOM linsteners
-window.addEventListener('beforeunload', () => ipcRenderer.send('quit-app'))
-window.addEventListener('offline', () => connectionStatus('offline'))
-logBtn.on('click', () => remote.shell.showItemInFolder(path.join(folder.log, filename.appLog)))
-sendBtn.on('click', () => danmuWin.webContents.send('danmu', sendTestDanmu()))
-offlineBtn.on('click', () => ipcRenderer.send('reconnect-tunnel'))
-$('input[name^=config-], select[name^=config-]').change(() => {
+function updateRoomCreater() {
+  const auth_token = remote.getGlobal('roomToken')
+  const key = remote.getGlobal('roomKey')
+  const body = {
+    user: {
+      email: $('#user-email').val(),
+      password: $('#user-password').val()
+    },
+    auth_token: auth_token
+  }
+  const jsonHeader = {
+    'Content-Type': 'application/json; charset=utf-8'
+  }
+  // POST https://danmu-classroom.herokuapp.com/api/rooms/${key}/update_creater
+  fetch(url.resolve(server.danmu, `api/rooms/${key}/update_creater`), {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: jsonHeader
+    })
+    .then(res => {
+      if (res.ok) return res.json()
+      return Promise.reject(res)
+    })
+    .then(body => {
+      $('#user-login').text('登入成功')
+      $('#user-login').addClass('disabled')
+    })
+    .catch(err => {
+      $('#user-password').val(null)
+      console.error(`status: ${err.statusText}`)
+      err.json().then(body => console.error(`error: ${JSON.stringify(body)}`))
+    })
+}
+
+function sendDanmuConfigs() {
   let fontFamily = $('#config-font-family').val()
   let fontSize = $('#config-font-size').val()
   let danmuSpeed = $('#config-danmu-speed').val()
@@ -67,7 +98,16 @@ $('input[name^=config-], select[name^=config-]').change(() => {
   }
   $('body').css('font-family', fontFamily)
   danmuWin.webContents.send('danmu-config-is', danmuConfig)
-})
+}
+
+// DOM linsteners
+window.addEventListener('beforeunload', () => ipcRenderer.send('quit-app'))
+window.addEventListener('offline', () => connectionStatus('offline'))
+logBtn.on('click', () => remote.shell.showItemInFolder(path.join(folder.log, filename.appLog)))
+sendBtn.on('click', () => danmuWin.webContents.send('danmu', sendTestDanmu()))
+offlineBtn.on('click', () => ipcRenderer.send('reconnect-tunnel'))
+loginBtn.on('click', () => updateRoomCreater())
+$('input[name^=config-], select[name^=config-]').change(() => sendDanmuConfigs())
 
 $(document).ready(() => {
   // setup radios for displays
