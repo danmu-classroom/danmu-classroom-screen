@@ -28,8 +28,8 @@ async function createRoom(webhook) {
       webhook: webhook
     }
   }
-  // POST https://danmu-classroom.herokuapp.com/rooms
-  const response = await fetch(url.resolve(server.danmu, 'rooms'), {
+  // POST https://danmu-classroom.herokuapp.com/api/rooms
+  const response = await fetch(url.resolve(server.danmu, 'api/rooms'), {
     method: 'POST',
     body: JSON.stringify(body),
     headers: jsonHeader
@@ -55,8 +55,8 @@ async function updateRoom(webhook) {
     },
     auth_token: roomToken
   }
-  // POST https://danmu-classroom.herokuapp.com/rooms/${roomKey}
-  const response = await fetch(url.resolve(server.danmu, `rooms/${roomKey}`), {
+  // POST https://danmu-classroom.herokuapp.com/api/rooms/${roomKey}
+  const response = await fetch(url.resolve(server.danmu, `api/rooms/${roomKey}`), {
     method: 'PATCH',
     body: JSON.stringify(body),
     headers: jsonHeader
@@ -94,8 +94,8 @@ initService(server.local.port, server.local.webhook).then(
     logger.error(`tunnel@error: ${err}`)
   })
 
-// reconnect
 process.on('message', (message) => {
+  // reconnect
   if (message.action == 'reconnect') {
     reconnectService(server.local.port, server.local.webhook).then(
       (room) => { // task done
