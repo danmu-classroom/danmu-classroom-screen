@@ -13,7 +13,7 @@ danmu-classroom-screen
 
 4. 掃描 Qrcode 加入 Line 好友
 
-5. 在 Line 聊天室中隨便打個字，等機器人回覆後按 `Setting room key :`
+5. 在 Line 聊天室中隨便打個字，等機器人回覆後按 `Setting room ke`
 
 6. 在 Line 聊天室輸入螢幕上的四位數字
 
