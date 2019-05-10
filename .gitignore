@@ -66,4 +66,4 @@ typings/
 .DS_Store
 
 # app releases
-/releases
+/dist/
