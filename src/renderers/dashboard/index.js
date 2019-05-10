@@ -1,16 +1,10 @@
 const path = require('path')
 const url = require('url')
-const {
-  ipcRenderer,
-  remote
-} = require('electron')
-const {
-  folder,
-  filename,
-  server
-} = remote.require('../config')
+const { ipcRenderer, remote } = require('electron')
+const log = require('electron-log')
+const { App } = remote.require('./app')
 
-const danmuWin = remote.getGlobal('wins').danmu
+const danmuWin = remote.getGlobal('windows').danmu
 const displays = remote.getGlobal('displays')
 const logBtn = $("#log-btn")
 const sendBtn = $("#send-btn")
@@ -63,14 +57,12 @@ function updateRoomCreater() {
     },
     auth_token: auth_token
   }
-  const jsonHeader = {
-    'Content-Type': 'application/json; charset=utf-8'
-  }
+
   // POST https://danmu-classroom.herokuapp.com/api/rooms/${key}/update_creater
-  fetch(url.resolve(server.danmu, `api/rooms/${key}/update_creater`), {
+  fetch(url.resolve(App.config.upstream, `api/rooms/${key}/update_creater`), {
       method: 'POST',
       body: JSON.stringify(body),
-      headers: jsonHeader
+      headers: { 'Content-Type': 'application/json; charset=utf-8' }
     })
     .then(res => {
       if (res.ok) return res.json()
@@ -103,7 +95,7 @@ function sendDanmuConfigs() {
 // DOM linsteners
 window.addEventListener('beforeunload', () => ipcRenderer.send('quit-app'))
 window.addEventListener('offline', () => connectionStatus('offline'))
-logBtn.on('click', () => remote.shell.showItemInFolder(path.join(folder.log, filename.appLog)))
+logBtn.on('click', () => remote.shell.showItemInFolder(App.log.transports.file.findLogPath()))
 sendBtn.on('click', () => danmuWin.webContents.send('danmu', sendTestDanmu()))
 offlineBtn.on('click', () => ipcRenderer.send('reconnect-tunnel'))
 loginBtn.on('click', () => updateRoomCreater())

@@ -1,53 +1,50 @@
-const {
-  ipcRenderer,
-  remote
-} = require('electron')
-const {
-  folder,
-  danmu
-} = remote.require('../config')
-const logger = remote.require('./logger')
+const { ipcRenderer, remote } = require('electron')
+const log = require('electron-log')
+const { App } = remote.require('./app')
 
-// setup canvas
+const danmus = []
+
+// Setup canvas
 const cvs = document.getElementById('canvas')
 const ctx = cvs.getContext('2d')
 cvs.width = window.innerWidth
 cvs.height = window.innerHeight
 
-// danmu config
-const danmus = []
+// Danmu config
 const danmusConfig = {
-  speed: danmu.default.speed,
-  fontFamily: danmu.default.fontFamily,
-  fontSize: danmu.default.fontSize,
-  color: danmu.default.color,
-  strokeColor: danmu.default.strokeColor,
-  strokeWidth: danmu.default.strokeWidth
+  speed: App.config.danmu.speed,
+  fontFamily: App.config.danmu.fontFamily,
+  fontSize: App.config.danmu.fontSize,
+  color: App.config.danmu.color,
+  strokeColor: App.config.danmu.strokeColor,
+  strokeWidth: App.config.danmu.strokeWidth
 }
 
 function draw() {
   let now = Date.now()
 
-  // apply config to canvas
-  ctx.clearRect(0, 0, cvs.width, cvs.height) // clear canvas
+
+  // Clear canvas and apply config to canvas
+  ctx.clearRect(0, 0, cvs.width, cvs.height)
   ctx.font = `${danmusConfig.fontSize}px ${danmusConfig.fontFamily}`;
   ctx.fillStyle = danmusConfig.color
   ctx.strokeStyle = danmusConfig.strokeColor
   ctx.lineWidth = danmusConfig.strokeWidth
 
   danmus.forEach((value, index) => {
-    value.x = cvs.width - cvs.width * (now - value.initTime) / danmusConfig.speed // compute and update danmu's x
+    // Compute and danmu's x, and update it to canvas
+    value.x = cvs.width - cvs.width * (now - value.initTime) / danmusConfig.speed
     if ((value.x + value.width) > 0) {
-      // painting danmu
+      // Painting danmu
       ctx.fillText(value.content, value.x, value.y)
       ctx.strokeText(value.content, value.x, value.y)
     } else {
-      // danmu is ending, remove it
+      // Danmu is ending, remove it
       danmus.splice(index, 1)
     }
   })
 
-  // use recursive to update canvas
+  // Use recursive to update canvas
   window.requestAnimationFrame(draw)
 }
 
@@ -60,18 +57,18 @@ function addDanmu(content) {
     width: ctx.measureText(content).width
   }
   danmus.push(danmu)
-  logger.info(`app@danmu painted: ${content}`)
+  App.log.info(`app@danmu painted: ${content}`)
 }
 
 function updateConfig(config) {
-  // update configs
+  // Update configs
   if (config.speed != null) danmusConfig.speed = config.speed
   if (config.fontFamily != null) danmusConfig.fontFamily = config.fontFamily
   if (config.fontSize != null) danmusConfig.fontSize = config.fontSize
-  logger.info(`app@danmu config update: ${JSON.stringify(config)}`)
+  App.log.info(`app@danmu config update: ${JSON.stringify(config)}`)
 }
 
-// auto create danmus
+// Auto create test danmu
 function danmusSimulation() {
   let counter = 1
 
@@ -89,7 +86,7 @@ function danmusSimulation() {
 }
 
 window.addEventListener('resize', () => {
-  // resize canvas to full window
+  // Resize canvas to full window
   cvs.width = window.innerWidth
   cvs.height = window.innerHeight
 })

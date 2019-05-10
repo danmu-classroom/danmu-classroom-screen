@@ -3,26 +3,21 @@ const fs = require('fs')
 const express = require('express')
 const bodyParser = require('body-parser');
 const morgan = require('morgan')
-const {
-  folder,
-  server,
-  filename
-} = require(path.join(__dirname, '../config'))
+const { App } = require(path.join(__dirname, '../app.js'))
 
 // Express setup and extend
 const app = express()
 app.set('view engine', 'ejs') // view template engine use ejs
 app.use(bodyParser.json()) // get post json params from req.body
-const logger = require(path.join(folder.main, 'logger')) // winston logger
 app.use(morgan('common')) // morgan logger to stdio
 app.use(morgan('common', { // morgan logger to file
-  stream: fs.createWriteStream(path.join(folder.log, filename.serverLog), {
+  stream: fs.createWriteStream(App.log.transports.file.findLogPath(), {
     flags: 'a'
   })
 }))
 
 // Express Routes
-app.post(server.local.webhook, (req, res) => { // danmu received
+app.post(App.config.localhost.webhook, (req, res) => { // danmu received
   body = {
     status: 'ok',
     message: 'danmu received',
@@ -33,10 +28,10 @@ app.post(server.local.webhook, (req, res) => { // danmu received
 })
 
 // Express server up
-app.listen(server.local.port, logger.info(`server@server up, listening port: ${server.local.port}`))
+app.listen(App.config.localhost.port, App.log.info(`server@server up, listening port: ${App.config.localhost.port}`))
 
 // Kill process
 process.on('SIGTERM', () => {
-  logger.info('server@SIGTERM')
+  App.log.info('server@SIGTERM')
   process.exit(0)
 })

@@ -1,12 +1,12 @@
 {
   "name": "danmu-classroom-screen",
   "description": "danmu-classroom-screen",
-  "main": "main/app.js",
   "author": "楊竑昕 <jk195417@gmail.com>",
   "repository": "https://github.com/danmu-classroom/danmu-classroom-screen",
   "homepage": "https://github.com/danmu-classroom/danmu-classroom-screen",
   "license": "MIT",
   "version": "2.1.1",
+  "main": "src/main.js",
   "scripts": {
     "start": "NODE_ENV=development electron .",
     "pack": "electron-builder --dir",
