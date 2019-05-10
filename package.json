@@ -8,7 +8,8 @@
   "version": "2.1.1",
   "main": "src/main.js",
   "scripts": {
-    "start": "NODE_ENV=development electron .",
+    "start": "NODE_ENV=development && electron .",
+    "start_win": "set NODE_ENV=production&& electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
@@ -41,9 +42,7 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "portable",
-        "zip"
+        "portable"
       ]
     }
   },
