@@ -9,5 +9,5 @@ const App = {
 App.config = require(path.join(App.root, `config/${App.env}.json`))
 
 module.exports = {
- App: App
+  App: App
 }

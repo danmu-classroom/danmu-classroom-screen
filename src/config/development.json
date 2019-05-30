@@ -3,11 +3,11 @@
     "port": 8080,
     "webhook": "/webhook"
   },
-  "upstream": "https://danmu-classroom.herokuapp.com",
+  "upstream": "http://localhost:3000",
   "danmu": {
     "speed": 5000,
     "fontFamily": "思源柔黑體",
-    "fontSize": 100,
+    "fontSize": 60,
     "color": "#fff",
     "strokeColor": "#000",
     "strokeWidth": 3
