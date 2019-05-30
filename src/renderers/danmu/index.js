@@ -77,14 +77,8 @@ async function getDanmus(upstream) {
 
 function poolingDanmus(upstream) {
   getDanmus(upstream)
-    .then(result => {
-      result.forEach(danmu => addDanmu(danmu.content))
-      // dashboardWin.webContents.send('connection', 'online')
-    })
-    .catch(error => {
-      App.log.error(`app@danmu: ${error}`)
-      // dashboardWin.webContents.send('connection', 'connecting')
-    })
+    .then(result => result.forEach(danmu => addDanmu(danmu.content)))
+    .catch(error => App.log.error(`app@danmu: ${error}`))
   setTimeout(() => poolingDanmus(upstream), 900)
 }
 
