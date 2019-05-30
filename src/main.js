@@ -61,7 +61,18 @@ app.on('ready', () => {
 app.on('activate', () => windows.dashboard.show())
 
 // IPC listeners
-ipcMain.on('reconnect-tunnel', (event, message) => reconnectTunnel())
+ipcMain.on('dashboard-ready', (event) => {
+  // Create Room
+  fetch(url.resolve(App.config.upstream, 'api/rooms'), {method: 'POST'})
+    .then(response => response.json())
+    .then(result => {
+      roomToken = result.auth_token
+      roomKey = result.key
+      windows.danmu.webContents.send('room-key', roomKey)
+      windows.dashboard.webContents.send('room-key', roomKey)
+      App.log.info(`app@room ${roomKey} created.`)
+    })
+})
 ipcMain.on('quit-app', (event, message) => {
   // Close all windows
   for (let key in windows) {

@@ -3,9 +3,10 @@ const url = require('url')
 const { ipcRenderer, remote } = require('electron')
 const log = require('electron-log')
 const { App } = remote.require('./app')
-
 const danmuWin = remote.getGlobal('windows').danmu
 const displays = remote.getGlobal('displays')
+let roomKey = ''
+let roomToken = ''
 const logBtn = $("#log-btn")
 const sendBtn = $("#send-btn")
 const offlineBtn = $("#connection-offline")
@@ -89,7 +90,7 @@ function sendDanmuConfigs() {
     speed: danmuSpeed
   }
   $('body').css('font-family', fontFamily)
-  danmuWin.webContents.send('danmu-config-is', danmuConfig)
+  danmuWin.webContents.send('danmu-config', danmuConfig)
 }
 
 // DOM linsteners
@@ -115,11 +116,16 @@ $(document).ready(() => {
     })
     danmuWin.setBounds(danmuDisplay.bounds)
   })
+
+  ipcRenderer.send('dashboard-ready')
 })
 
 // IPC listeners
-ipcRenderer.on('room-key-is', (event, key) => {
+ipcRenderer.on('room-key', (event, key) => {
+  // Update room key and token
+  roomKey = remote.getGlobal('roomKey')
+  roomToken = remote.getGlobal('roomToken')
   connectionStatus('online')
-  $("#key").text(key) // update key
+  $('#key').text(roomKey)
 })
-ipcRenderer.on('connecting', (event, key) => connectionStatus('connecting'))
+ipcRenderer.on('connection', (event, status) => connectionStatus(status))
