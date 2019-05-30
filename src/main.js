@@ -19,6 +19,7 @@ app.on('ready', () => {
   App.log.info(`app@danmu classroom running in ${App.env} mode`)
   // Danmu window
   windows.danmu = new BrowserWindow({
+    titleBarStyle: 'customButtonsOnHover',
     frame: false,
     transparent: true
   })
