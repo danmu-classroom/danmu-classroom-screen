@@ -8,8 +8,8 @@
   "version": "0.2.0",
   "main": "src/main.js",
   "scripts": {
-    "start": "NODE_ENV=development && electron .",
-    "start_win": "set NODE_ENV=production&& electron .",
+    "start": "NODE_ENV=development electron .",
+    "start_win": "set NODE_ENV=development&& electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
