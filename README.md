@@ -4,8 +4,8 @@
 
 1. 下載
 
-  - Win 10 : https://github.com/danmu-classroom/danmu-classroom-screen/releases/download/v0.2.0/danmu-classroom-screen-0.2.0-win10-x64.zip
-  - Mac : https://github.com/danmu-classroom/danmu-classroom-screen/releases/download/v0.2.0/danmu-classroom-screen-0.2.0-mac.zip
+  - Win 10 : https://github.com/danmu-classroom/danmu-classroom-screen/releases/download/v0.3.0/danmu-classroom-screen-0.3.0-win10-x64.zip
+  - Mac : https://github.com/danmu-classroom/danmu-classroom-screen/releases/download/v0.3.0/danmu-classroom-screen-0.3.0-mac.zip
 
 2. 解壓縮至桌面
 
