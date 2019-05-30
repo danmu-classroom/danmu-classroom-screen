@@ -96,7 +96,7 @@ ipcRenderer.on('room-key', (event) => {
   roomKey = remote.getGlobal('roomKey')
   roomToken = remote.getGlobal('roomToken')
   $('#key').text(roomKey)
-
+  addDanmu(`歡迎使用彈幕教室，房間號碼 ${roomKey}`)
   // Start pooling danmus
   poolingDanmus(url.resolve(App.config.upstream, `api/rooms/${roomKey}/danmus?auth_token=${roomToken}`))
 })
