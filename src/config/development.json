@@ -1,8 +1,4 @@
 {
-  "localhost": {
-    "port": 8080,
-    "webhook": "/webhook"
-  },
   "upstream": "http://localhost:3000",
   "danmu": {
     "speed": 5000,

@@ -14,17 +14,11 @@
     "dist": "electron-builder"
   },
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "bootstrap": "^4.3.1",
-    "ejs": "^2.6.1",
-    "electron-log": "^3.0.5",
-    "express": "^4.16.4",
-    "jquery": "^3.4.0",
-    "morgan": "^1.9.1",
-    "ngrok": "^3.1.1",
     "node-fetch": "^2.3.0",
-    "popper.js": "^1.14.7",
-    "winston": "^3.2.1"
+    "electron-log": "^3.0.5",
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.14.7"
   },
   "devDependencies": {
     "electron": "^2.0.0",

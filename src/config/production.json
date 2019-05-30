@@ -1,8 +1,4 @@
 {
-  "localhost": {
-    "port": 8080,
-    "webhook": "/webhook"
-  },
   "upstream": "https://danmu-classroom.herokuapp.com",
   "danmu": {
     "speed": 5000,

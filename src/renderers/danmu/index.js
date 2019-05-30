@@ -1,14 +1,10 @@
+const url = require('url')
 const { ipcRenderer, remote } = require('electron')
-const log = require('electron-log')
 const { App } = remote.require('./app')
-
+const dashboardWin = remote.getGlobal('windows').dashboard
 const danmus = []
-
-// Setup canvas
-const cvs = document.getElementById('canvas')
-const ctx = cvs.getContext('2d')
-cvs.width = window.innerWidth
-cvs.height = window.innerHeight
+let roomKey = ''
+let roomToken = ''
 
 // Danmu config
 const danmusConfig = {
@@ -20,9 +16,14 @@ const danmusConfig = {
   strokeWidth: App.config.danmu.strokeWidth
 }
 
+// Setup canvas
+const cvs = document.getElementById('canvas')
+const ctx = cvs.getContext('2d')
+cvs.width = window.innerWidth
+cvs.height = window.innerHeight
+
 function draw() {
   let now = Date.now()
-
 
   // Clear canvas and apply config to canvas
   ctx.clearRect(0, 0, cvs.width, cvs.height)
@@ -68,21 +69,17 @@ function updateConfig(config) {
   App.log.info(`app@danmu config update: ${JSON.stringify(config)}`)
 }
 
-// Auto create test danmu
-function danmusSimulation() {
-  let counter = 1
+async function getDanmus(upstream) {
+  const response = await fetch(upstream)
+  const result = await response.json()
+  return result
+}
 
-  function nextDanmu() {
-    let randSec = Math.floor(Math.random() * 10000)
-    console.log(randSec)
-    setTimeout(() => {
-      addDanmu(`我來報數拉 ${counter}`)
-      counter += 1
-      nextDanmu()
-    }, randSec)
-  }
-
-  nextDanmu()
+function poolingDanmus(upstream) {
+  getDanmus(upstream)
+    .then(result => result.forEach(danmu => addDanmu(danmu.content)))
+    .catch(error => App.log.error(`app@danmu: ${error}`))
+  setTimeout(() => poolingDanmus(upstream), 900)
 }
 
 window.addEventListener('resize', () => {
@@ -91,13 +88,17 @@ window.addEventListener('resize', () => {
   cvs.height = window.innerHeight
 })
 window.addEventListener('beforeunload', () => ipcRenderer.send('quit-app'))
-$(document).ready(() => {
-  addDanmu('Danmu Classroom launched.')
-  // danmusSimulation()
-  window.requestAnimationFrame(draw)
-})
+$(document).ready(() => window.requestAnimationFrame(draw))
 
 // IPC listener
+ipcRenderer.on('room-key', (event) => {
+  // Update room key and token
+  roomKey = remote.getGlobal('roomKey')
+  roomToken = remote.getGlobal('roomToken')
+  $('#key').text(roomKey)
+  addDanmu(`歡迎使用彈幕教室，房間號碼 ${roomKey}`)
+  // Start pooling danmus
+  poolingDanmus(url.resolve(App.config.upstream, `api/rooms/${roomKey}/danmus?auth_token=${roomToken}`))
+})
 ipcRenderer.on('danmu', (event, message) => addDanmu(message.content)) // paint danmu
-ipcRenderer.on('room-key-is', (event, key) => $('#key').text(key)) // update room key
-ipcRenderer.on('danmu-config-is', (event, config) => updateConfig(config)) // update config
+ipcRenderer.on('danmu-config', (event, config) => updateConfig(config)) // Update config

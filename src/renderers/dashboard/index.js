@@ -3,31 +3,10 @@ const url = require('url')
 const { ipcRenderer, remote } = require('electron')
 const log = require('electron-log')
 const { App } = remote.require('./app')
-
 const danmuWin = remote.getGlobal('windows').danmu
 const displays = remote.getGlobal('displays')
-const logBtn = $("#log-btn")
-const sendBtn = $("#send-btn")
-const offlineBtn = $("#connection-offline")
-const onlineBtn = $("#connection-online")
-const connectingBtn = $("#connection-connecting")
-const loginBtn = $("#user-login")
-
-function connectionStatus(status) {
-  if (status == 'online') {
-    onlineBtn.removeClass('d-none')
-    offlineBtn.addClass('d-none')
-    connectingBtn.addClass('d-none')
-  } else if (status == 'connecting') {
-    connectingBtn.removeClass('d-none')
-    offlineBtn.addClass('d-none')
-    onlineBtn.addClass('d-none')
-  } else if (status == 'offline') {
-    offlineBtn.removeClass('d-none')
-    connectingBtn.addClass('d-none')
-    onlineBtn.addClass('d-none')
-  }
-}
+let roomKey = ''
+let roomToken = ''
 
 function displayRadioHTML(order, id) {
   const radio = `
@@ -48,22 +27,20 @@ function sendTestDanmu() {
 }
 
 function updateRoomCreater() {
-  const auth_token = remote.getGlobal('roomToken')
-  const key = remote.getGlobal('roomKey')
-  const body = {
-    user: {
-      email: $('#user-email').val(),
-      password: $('#user-password').val()
-    },
-    auth_token: auth_token
+  const api = url.resolve(App.config.upstream, `api/rooms/${roomKey}`)
+  const params = {
+    email: $('#user-email').val(),
+    password: $('#user-password').val(),
+    auth_token: roomToken
+  }
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(params),
+    headers: { 'Content-Type': 'application/json; charset=utf-8' }
   }
 
-  // POST https://danmu-classroom.herokuapp.com/api/rooms/${key}/update_creater
-  fetch(url.resolve(App.config.upstream, `api/rooms/${key}/update_creater`), {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json; charset=utf-8' }
-    })
+  // POST https://danmu-classroom.herokuapp.com/api/rooms/${roomKey}
+  fetch(api, options)
     .then(res => {
       if (res.ok) return res.json()
       return Promise.reject(res)
@@ -72,10 +49,9 @@ function updateRoomCreater() {
       $('#user-login').text('登入成功')
       $('#user-login').addClass('disabled')
     })
-    .catch(err => {
+    .catch(error => {
       $('#user-password').val(null)
-      console.error(`status: ${err.statusText}`)
-      err.json().then(body => console.error(`error: ${JSON.stringify(body)}`))
+      error.json().then(message => App.log.error(`app@dashboard login error ${JSON.stringify(message)}`))
     })
 }
 
@@ -89,16 +65,14 @@ function sendDanmuConfigs() {
     speed: danmuSpeed
   }
   $('body').css('font-family', fontFamily)
-  danmuWin.webContents.send('danmu-config-is', danmuConfig)
+  danmuWin.webContents.send('danmu-config', danmuConfig)
 }
 
 // DOM linsteners
 window.addEventListener('beforeunload', () => ipcRenderer.send('quit-app'))
-window.addEventListener('offline', () => connectionStatus('offline'))
-logBtn.on('click', () => remote.shell.showItemInFolder(App.log.transports.file.findLogPath()))
-sendBtn.on('click', () => danmuWin.webContents.send('danmu', sendTestDanmu()))
-offlineBtn.on('click', () => ipcRenderer.send('reconnect-tunnel'))
-loginBtn.on('click', () => updateRoomCreater())
+$("#log-btn").on('click', () => remote.shell.showItemInFolder(App.log.transports.file.findLogPath()))
+$("#send-btn").on('click', () => danmuWin.webContents.send('danmu', sendTestDanmu()))
+$("#user-login").on('click', () => updateRoomCreater())
 $('input[name^=config-], select[name^=config-]').change(() => sendDanmuConfigs())
 
 $(document).ready(() => {
@@ -115,11 +89,14 @@ $(document).ready(() => {
     })
     danmuWin.setBounds(danmuDisplay.bounds)
   })
+
+  ipcRenderer.send('dashboard-ready')
 })
 
 // IPC listeners
-ipcRenderer.on('room-key-is', (event, key) => {
-  connectionStatus('online')
-  $("#key").text(key) // update key
+ipcRenderer.on('room-key', (event, key) => {
+  // Update room key and token
+  roomKey = remote.getGlobal('roomKey')
+  roomToken = remote.getGlobal('roomToken')
+  $('#key').text(roomKey)
 })
-ipcRenderer.on('connecting', (event, key) => connectionStatus('connecting'))
