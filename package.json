@@ -14,7 +14,7 @@
     "dist": "electron-builder"
   },
   "dependencies": {
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.1",
     "electron-log": "^3.0.5",
     "bootstrap": "^4.3.1",
     "jquery": "^3.5.0",
