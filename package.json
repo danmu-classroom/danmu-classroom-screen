@@ -27,7 +27,7 @@
   "build": {
     "appId": "com.electron.danmu-classroom-screen",
     "productName": "danmu-classroom-screen",
-    "copyright": "Copyright © 2019 楊竑昕",
+    "copyright": "Copyright © 2020 楊竑昕",
     "mac": {
       "category": "public.app-category.utilities"
     },
