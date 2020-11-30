@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Bootstrap to v4.5
+- Upgrade others node_modules
+
 ## [0.3.0] - 2019-05-30
 
 ### Changed
