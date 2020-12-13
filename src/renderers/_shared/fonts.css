@@ -1,9 +1,9 @@
 @font-face {
   font-family: '瀨戶字體';
-  src: url('../../public/fonts/setofont.ttf') format("opentype");
+  src: url('../../public/fonts/setofont.ttf') format('opentype');
 }
 
 @font-face {
   font-family: '思源柔黑體';
-  src: url('../../public/fonts/GenJyuuGothic-Bold.ttf') format("opentype");
+  src: url('../../public/fonts/GenJyuuGothic-Bold.ttf') format('opentype');
 }
