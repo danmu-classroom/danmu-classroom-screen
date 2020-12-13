@@ -1,3 +1,3 @@
-const $ = require('jquery')
-const Popper = require('popper.js')
-require('bootstrap')
+const $ = require('jquery');
+const Popper = require('popper.js');
+require('bootstrap');

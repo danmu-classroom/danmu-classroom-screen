@@ -1,32 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>彈幕教室</title>
-    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../_shared/fonts.css">
-    <link rel="stylesheet" href="./index.css">
+    <link
+      rel="stylesheet"
+      href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="../_shared/fonts.css" />
+    <link rel="stylesheet" href="./index.css" />
   </head>
 
   <body>
-
     <div class="jumbotron h-100">
       <div class="container-fluid">
-        <h1 class="display-2 d-flex flex-wrap align-items-center text-center justify-content-center">
-          <img src="../../public/img/icon.png" width="150" height="150" class="mr-2">
+        <h1
+          class="display-2 d-flex flex-wrap align-items-center text-center justify-content-center"
+        >
+          <img
+            src="../../public/img/icon.png"
+            width="150"
+            height="150"
+            class="mr-2"
+          />
           彈幕教室
         </h1>
         <div class="row">
           <div class="col-sm d-flex flex-wrap align-items-center mb-3">
-            <img src="../../public/img/line-bot-qr.png" class="img-fluid mx-auto">
+            <img
+              src="../../public/img/line-bot-qr.png"
+              class="img-fluid mx-auto"
+            />
           </div>
           <div class="col-sm d-flex flex-wrap align-items-center mb-3">
             <ol>
               <li class="lead">掃瞄 QR Code 加入好友</li>
-              <li class="lead">輸入房號
+              <li class="lead">
+                輸入房號
                 <span id="key" class="ml-2 text-warning display-2"></span>
               </li>
               <li class="lead">暢所欲言</li>
@@ -41,9 +53,20 @@
         <div class="card-header">發送彈幕</div>
         <div class="card-body">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="請輸入想發送的彈幕內容" id="test-danmu">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="請輸入想發送的彈幕內容"
+              id="test-danmu"
+            />
             <div class="input-group-append">
-              <button class="btn btn-outline-primary" type="button" id="send-btn">測試</button>
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                id="send-btn"
+              >
+                測試
+              </button>
             </div>
           </div>
         </div>
@@ -54,18 +77,42 @@
           <form>
             <div class="form-group row">
               <label for="config-font-family" class="col">字型</label>
-              <select class="form-control col" id="config-font-family" name="config-font-family">
-                <option value="思源柔黑體" selected="selected">思源柔黑體</option>
+              <select
+                class="form-control col"
+                id="config-font-family"
+                name="config-font-family"
+              >
+                <option value="思源柔黑體" selected="selected">
+                  思源柔黑體
+                </option>
                 <option value="瀨戶字體">瀨戶字體</option>
               </select>
             </div>
             <div class="form-group row">
               <label for="config-font-size" class="col">字體大小(px)</label>
-              <input type="range" class="form-control-range col" id="config-font-size" min="16" max="200" value="100" step="1" name="config-font-size">
+              <input
+                type="range"
+                class="form-control-range col"
+                id="config-font-size"
+                min="16"
+                max="200"
+                value="100"
+                step="1"
+                name="config-font-size"
+              />
             </div>
             <div class="form-group row">
               <label for="config-danmu-speed" class="col">彈幕速度(ms)</label>
-              <input type="range" class="form-control-range col" id="config-danmu-speed" min="2000" max="20000" value="5000" step="200" name="config-danmu-speed">
+              <input
+                type="range"
+                class="form-control-range col"
+                id="config-danmu-speed"
+                min="2000"
+                max="20000"
+                value="5000"
+                step="200"
+                name="config-danmu-speed"
+              />
             </div>
             <div class="form-group row" id="displays-form">
               <label for="config-danmu-display" class="col">使用螢幕</label>
@@ -73,7 +120,13 @@
               example</label> </div> -->
             </div>
           </form>
-          <button type="button" class="btn btn-secondary btn-sm btn-block" id="log-btn">開啓 Log 檔</button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm btn-block"
+            id="log-btn"
+          >
+            開啓 Log 檔
+          </button>
         </div>
       </div>
       <div class="card m-2">
@@ -81,10 +134,24 @@
         <div class="card-body">
           <div class="form-inline">
             <label for="user-email">Email</label>
-            <input type="email" class="form-control ml-1 mr-2" id="user-email">
+            <input
+              type="email"
+              class="form-control ml-1 mr-2"
+              id="user-email"
+            />
             <label for="user-password">密碼</label>
-            <input type="password" class="form-control ml-1 mr-2" id="user-password">
-            <button type="submit" class="btn btn-primary ml-auto" id="user-login">登入</button>
+            <input
+              type="password"
+              class="form-control ml-1 mr-2"
+              id="user-password"
+            />
+            <button
+              type="submit"
+              class="btn btn-primary ml-auto"
+              id="user-login"
+            >
+              登入
+            </button>
           </div>
         </div>
       </div>
@@ -93,5 +160,4 @@
     <script src="../_shared/bootstrap_dependencies.js" charset="utf-8"></script>
     <script src="./index.js" charset="utf-8"></script>
   </body>
-
 </html>
