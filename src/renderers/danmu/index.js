@@ -1,5 +1,6 @@
 const url = require('url');
 const { ipcRenderer, remote } = require('electron');
+
 const { App } = remote.require('./app');
 const dashboardWin = remote.getGlobal('windows').dashboard;
 const danmus = [];
@@ -23,7 +24,7 @@ cvs.width = window.innerWidth;
 cvs.height = window.innerHeight;
 
 function draw() {
-  let now = Date.now();
+  const now = Date.now();
 
   // Clear canvas and apply config to canvas
   ctx.clearRect(0, 0, cvs.width, cvs.height);
@@ -51,8 +52,8 @@ function draw() {
 }
 
 function addDanmu(content) {
-  let danmu = {
-    content: content,
+  const danmu = {
+    content,
     x: cvs.width,
     y: Math.floor(Math.random() * cvs.height),
     initTime: Date.now(),

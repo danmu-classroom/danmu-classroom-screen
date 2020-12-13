@@ -2,6 +2,7 @@ const path = require('path');
 const url = require('url');
 const { ipcRenderer, remote } = require('electron');
 const log = require('electron-log');
+
 const { App } = remote.require('./app');
 const danmuWin = remote.getGlobal('windows').danmu;
 const displays = remote.getGlobal('displays');
@@ -60,12 +61,12 @@ function updateRoomCreater() {
 }
 
 function sendDanmuConfigs() {
-  let fontFamily = $('#config-font-family').val();
-  let fontSize = $('#config-font-size').val();
-  let danmuSpeed = $('#config-danmu-speed').val();
-  let danmuConfig = {
-    fontSize: fontSize,
-    fontFamily: fontFamily,
+  const fontFamily = $('#config-font-family').val();
+  const fontSize = $('#config-font-size').val();
+  const danmuSpeed = $('#config-danmu-speed').val();
+  const danmuConfig = {
+    fontSize,
+    fontFamily,
     speed: danmuSpeed,
   };
   $('body').css('font-family', fontFamily);
@@ -94,7 +95,7 @@ $(document).ready(() => {
   $('#config-danmu-display1').prop('checked', true);
   // change display
   $('input[name=config-danmu-display]').change(() => {
-    let danmuDisplay = displays.find((display, index) => {
+    const danmuDisplay = displays.find((display, index) => {
       return display.id == $('input[name=config-danmu-display]:checked').val();
     });
     danmuWin.setBounds(danmuDisplay.bounds);

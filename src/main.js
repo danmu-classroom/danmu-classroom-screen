@@ -9,6 +9,7 @@ const {
   Tray,
   nativeImage,
 } = require('electron');
+
 const { App } = require(path.join(__dirname, 'app'));
 
 // Global references
@@ -93,7 +94,7 @@ ipcMain.on('dashboard-ready', (event) => {
 });
 ipcMain.on('quit-app', (event, message) => {
   // Close all windows
-  for (let key in windows) {
+  for (const key in windows) {
     if (windows.hasOwnProperty(key) && windows[key] !== null)
       windows[key].destroy();
   }
