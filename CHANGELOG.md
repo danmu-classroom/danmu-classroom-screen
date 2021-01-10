@@ -9,12 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- TypeScript Prettier ESLint and lots of config files
-- Compiled Javascript will locate at `/build`
-- Add `/build` .gitignore
+- TypeScript
+- Parcel
+- Prettier
+- ESLint
+- Sass
+- Lots of config files
+- Lots of npm scripts
+- Add `/build` and `/.cache` to .gitignore
 
 ### Changed
 
+- Rewrite by TypeScript
 - Upgrade Bootstrap to v4.5
 - Upgrade others node_modules
 - Move election builder buildResources dir from `/build` to `/build-resources`

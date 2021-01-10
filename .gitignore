@@ -68,3 +68,4 @@ typings/
 # app build and releases
 /build
 /dist
+/.cache

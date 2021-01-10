@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Danmu Classroom Screen</title>
+    <link rel="stylesheet" href="./assets/stylesheets/canvas.scss" />
+    <script
+      async
+      defer
+      src="./assets/javascripts/canvas.ts"
+      charset="utf-8"
+    ></script>
+  </head>
+  <body data-controller="canvas" data-action="resize@window->canvas#resize">
+    <canvas data-canvas-target="canvas" id="canvas"></canvas>
+    <div class="fixed-bottom">
+      <span data-canvas-target="roomKey" class="text-muted"></span>
+    </div>
+  </body>
+</html>
