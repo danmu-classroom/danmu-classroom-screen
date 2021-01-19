@@ -1,0 +1,10 @@
+@import '../../../../../node_modules/bootstrap/scss/bootstrap.scss';
+@import './fonts';
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background-color: rgba(0, 0, 0, 0);
+}

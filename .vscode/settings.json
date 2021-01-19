@@ -16,12 +16,16 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[html]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": ["javascript", "typescript", "html"],
+  "eslint.validate": ["javascript", "typescript"],
   "eslint.options": {
-    "extensions": [".js", ".ts", ".html"]
+    "extensions": [".js", ".ts"]
   },
-  "cSpell.words": ["multiline"]
+  "cSpell.words": ["Danmus", "READMD", "danmu", "multiline"]
 }
