@@ -9,12 +9,15 @@
   "main": "build/main.js",
   "scripts": {
     "start": "yarn parcel:build && cross-env NODE_ENV=development electron .",
+    "build": "yarn parcel:build && yarn electron:dist:all",
     "clean": "rimraf ./dist ./.cache ./build",
-    "clean:super": "rimraf ./node_modules ./dist ./.cache ./build",
-    "eslint": "eslint --fix --ext .js,.ts src/",
-    "prettier": "prettier --write .",
+    "clean:super": "rimraf ./dist ./.cache ./build ./node_modules",
+    "format": "yarn format:eslint && yarn format:prettier",
+    "format:eslint": "eslint --fix --ext .js,.ts src/",
+    "format:prettier": "prettier --write .",
     "electron:pack": "electron-builder --dir",
     "electron:dist": "electron-builder",
+    "electron:dist:all": "electron-builder -wml",
     "parcel:build": "yarn parcel:build:renderers && yarn parcel:build:main",
     "parcel:build:main": "parcel build ./src/main.ts -d ./build --target node",
     "parcel:build:renderers": "parcel build ./src/app/renderers/*.html -d ./build/renderers --public-url ./ --target electron"
