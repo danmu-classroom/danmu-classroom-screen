@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-01-20
+
 ### Added
 
 - TypeScript
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lots of config files
 - Lots of npm scripts
 - Add `/build` and `/.cache` to .gitignore
+- Support Linux platform
 
 ### Changed
 
@@ -57,7 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Windows 10 app
 - Mac Os X app
 
-[unreleased]: https://github.com/danmu-classroom/danmu-classroom-screen/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/danmu-classroom/danmu-classroom-screen/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/danmu-classroom/danmu-classroom-screen/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/danmu-classroom/danmu-classroom-screen/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/danmu-classroom/danmu-classroom-screen/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/danmu-classroom/danmu-classroom-screen/releases/tag/v0.1.0
