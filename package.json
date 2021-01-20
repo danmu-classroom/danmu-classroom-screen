@@ -5,7 +5,7 @@
   "repository": "https://github.com/danmu-classroom/danmu-classroom-screen",
   "homepage": "https://github.com/danmu-classroom/danmu-classroom-screen",
   "license": "MIT",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "main": "build/main.js",
   "scripts": {
     "start": "yarn parcel:build && cross-env NODE_ENV=development electron .",
