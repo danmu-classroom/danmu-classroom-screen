@@ -26,7 +26,7 @@
     "@popperjs/core": "^2.5.4",
     "bootstrap": "^5.0.0-beta1",
     "electron-log": "~4.3.1",
-    "node-fetch": "~2.6.1",
+    "node-fetch": "~3.1.1",
     "stimulus": "^2.0.0"
   },
   "devDependencies": {
