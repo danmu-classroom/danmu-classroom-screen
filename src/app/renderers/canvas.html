@@ -3,15 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
+    />
     <title>Danmu Classroom Screen</title>
     <link rel="stylesheet" href="./assets/stylesheets/canvas.scss" />
-    <script
-      async
-      defer
-      src="./assets/javascripts/canvas.ts"
-      charset="utf-8"
-    ></script>
+    <script type="module" src="./assets/javascripts/canvas.ts"></script>
   </head>
   <body data-controller="canvas" data-action="resize@window->canvas#resize">
     <canvas data-canvas-target="canvas" id="canvas"></canvas>

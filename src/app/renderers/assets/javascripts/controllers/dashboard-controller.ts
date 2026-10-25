@@ -1,8 +1,6 @@
-import { Display } from 'electron/common';
-import { ipcRenderer } from 'electron/renderer';
-import { Controller } from 'stimulus';
-import logger from 'electron-log';
-import { AppConfig, Room } from '../../../../core/models';
+import { Controller } from '@hotwired/stimulus';
+import type { Display } from 'electron';
+import type { AppConfig, Room } from '../../../../core/models';
 
 export class DashboardController extends Controller {
   static targets = [
@@ -15,19 +13,17 @@ export class DashboardController extends Controller {
   ];
   static values = {
     appConfig: Object,
-    canvasWindowId: Number,
     room: Object,
   };
 
-  appConfigValue: AppConfig;
-  canvasWindowIdValue: number;
-  displaysInputContainerTarget: HTMLElement;
-  fontFamilySelectTarget: HTMLSelectElement;
-  fontSizeInputTarget: HTMLInputElement;
-  roomKeyTarget: HTMLElement;
-  roomValue: Room;
-  speedInputTarget: HTMLInputElement;
-  testDanmuInputTarget: HTMLInputElement;
+  declare appConfigValue: AppConfig;
+  declare displaysInputContainerTarget: HTMLElement;
+  declare fontFamilySelectTarget: HTMLSelectElement;
+  declare fontSizeInputTarget: HTMLInputElement;
+  declare roomKeyTarget: HTMLElement;
+  declare roomValue: Room;
+  declare speedInputTarget: HTMLInputElement;
+  declare testDanmuInputTarget: HTMLInputElement;
 
   // eslint-disable-next-line class-methods-use-this
   changeCanvasDisplay() {
@@ -35,39 +31,32 @@ export class DashboardController extends Controller {
       'input[name=config-danmu-display]:checked'
     );
     const displayId = Number(input.value);
-    ipcRenderer.send('dashboard:changeCanvasDisplay', displayId);
+    window.danmu.changeCanvasDisplay(displayId);
   }
 
   connect() {
-    ipcRenderer.on('app:roomCreated', (_event, newRoom: Room) => {
-      this.roomValue = newRoom;
-      this.roomKeyTarget.innerText = newRoom.key;
-    });
+    // The room may have been created before this window finished loading
+    void window.danmu.getRoom().then((room) => room && this.showRoom(room));
+    window.danmu.onRoomCreated((room) => this.showRoom(room));
 
-    ipcRenderer
-      .invoke('app:getDisplays')
-      .then((displays: Display[]) => this.renderDisplayRadios(displays))
-      .catch((error) =>
-        logger.error(
-          `renderer @ dashboard get displays error: ${JSON.stringify(error)}`
-        )
+    window.danmu
+      .getDisplays()
+      .then((displays) => this.renderDisplayRadios(displays))
+      .catch((error: unknown) =>
+        window.danmu.log('error', 'renderer @ dashboard get displays error:', error)
       );
   }
 
   // eslint-disable-next-line class-methods-use-this
   openLogDir() {
-    ipcRenderer.send('app:openLogDir');
+    window.danmu.openLogDir();
   }
 
   sendTestDanmu() {
     const testDanmu = this.testDanmuInputTarget.value;
     if (testDanmu == null) return;
 
-    ipcRenderer.sendTo(
-      this.canvasWindowIdValue,
-      'dashboard:sendTestDanmu',
-      testDanmu
-    );
+    window.danmu.sendTestDanmu(testDanmu);
     this.testDanmuInputTarget.value = null;
   }
 
@@ -88,13 +77,8 @@ export class DashboardController extends Controller {
       danmu,
     };
 
-    ipcRenderer.sendTo(
-      this.canvasWindowIdValue,
-      'dashboard:updateDanmuConfig',
-      danmu
-    );
-    ipcRenderer.send('dashboard:updateDanmuConfig', danmu);
-    logger.info(danmu);
+    window.danmu.updateDanmuConfig(danmu);
+    window.danmu.log('info', danmu);
   }
 
   private renderDisplayRadios(displays: Display[]) {
@@ -131,5 +115,10 @@ export class DashboardController extends Controller {
     displayRadios.forEach((displayRadio) =>
       this.displaysInputContainerTarget.appendChild(displayRadio)
     );
+  }
+
+  private showRoom(room: Room) {
+    this.roomValue = room;
+    this.roomKeyTarget.innerText = room.key;
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "danmu-classroom-screen (Node 16 + Electron)",
+  "name": "danmu-classroom-screen (Node 24 + Electron 45)",
   "build": { "dockerfile": "Dockerfile" },
   "features": {
     // Lightweight desktop so the Electron window can be viewed at http://localhost:6080 (password: vscode)
@@ -19,7 +19,7 @@
     "ELECTRON_DISABLE_SANDBOX": "1"
   },
   "remoteUser": "node",
-  "postCreateCommand": "sudo chown node:node node_modules && yarn install --frozen-lockfile",
+  "postCreateCommand": "sudo chown node:node node_modules && yarn install --frozen-lockfile && node node_modules/electron/install.js",
   "customizations": {
     "vscode": {
       "extensions": [

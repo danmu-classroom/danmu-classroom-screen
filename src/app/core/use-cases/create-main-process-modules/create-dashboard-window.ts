@@ -1,29 +1,14 @@
 import { BrowserWindow } from 'electron';
-import logger from 'electron-log';
-import url from 'url';
+import { loadRenderer, preloadPath } from './load-renderer';
 
-export const dashboardWindow = new BrowserWindow({
-  minHeight: 450,
-  minWidth: 450,
-  webPreferences: {
-    nodeIntegration: true,
-  },
-});
+export async function createDashboardWindow() {
+  const dashboardWindow = new BrowserWindow({
+    minHeight: 450,
+    minWidth: 450,
+    webPreferences: { preload: preloadPath },
+  });
 
-dashboardWindow
-  .loadURL(
-    url.format({
-      // Path of __dirname will be build after yarn build:main
-      // Point to builded canvas html: build/renderers/dashboard.html
-      pathname: `${__dirname}/renderers/dashboard.html`,
-      protocol: 'file:',
-      slashes: true,
-    })
-  )
-  .then(() => {
-    logger.info('app @ dashboard window created');
-    dashboardWindow.maximize();
-  })
-  .catch((e) =>
-    logger.error(`app @ dashboard window create failed: ${JSON.stringify(e)}`)
-  );
+  await loadRenderer(dashboardWindow, 'dashboard');
+  dashboardWindow.maximize();
+  return dashboardWindow;
+}

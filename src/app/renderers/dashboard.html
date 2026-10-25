@@ -4,15 +4,13 @@
     <base href="./" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
+    />
     <title>彈幕教室</title>
     <link rel="stylesheet" href="./assets/stylesheets/dashboard.scss" />
-    <script
-      async
-      defer
-      src="./assets/javascripts/dashboard.ts"
-      charset="utf-8"
-    ></script>
+    <script type="module" src="./assets/javascripts/dashboard.ts"></script>
   </head>
 
   <body>
@@ -59,16 +57,14 @@
               placeholder="請輸入想發送的彈幕內容"
               data-dashboard-target="testDanmuInput"
             />
-            <div class="input-group-append">
-              <button
-                class="btn btn-outline-primary"
-                type="button"
-                id="send-btn"
-                data-action="click->dashboard#sendTestDanmu"
-              >
-                測試
-              </button>
-            </div>
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              id="send-btn"
+              data-action="click->dashboard#sendTestDanmu"
+            >
+              測試
+            </button>
           </div>
         </div>
       </div>

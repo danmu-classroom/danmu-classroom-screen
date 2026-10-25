@@ -1,7 +1,5 @@
-import { ipcRenderer } from 'electron/renderer';
-import { Controller } from 'stimulus';
-import logger from 'electron-log';
-import { AppConfig, Danmu, DanmuConfig, Room } from '../../../../core/models';
+import { Controller } from '@hotwired/stimulus';
+import type { AppConfig, Room } from '../../../../core/models';
 import { CanvasDanmu } from '../models';
 
 export class CanvasController extends Controller {
@@ -11,45 +9,32 @@ export class CanvasController extends Controller {
     room: Object,
   };
 
-  appConfigValue: AppConfig;
+  declare appConfigValue: AppConfig;
   canvasContext: CanvasRenderingContext2D;
   canvasDanmus: CanvasDanmu[] = [];
-  canvasTarget: HTMLCanvasElement;
-  roomKeyTarget: HTMLElement;
-  roomValue: Room;
-
-  get api() {
-    const api = new URL(
-      `api/rooms/${this.roomValue.key}/danmus`,
-      this.appConfigValue.upstream
-    );
-    api.searchParams.append('auth_token', this.roomValue.auth_token);
-    return api;
-  }
+  declare canvasTarget: HTMLCanvasElement;
+  declare roomKeyTarget: HTMLElement;
+  declare roomValue: Room;
 
   connect() {
     this.canvasContext = this.canvasTarget.getContext('2d');
 
-    ipcRenderer.on('app:roomCreated', (_event, newRoom: Room) => {
-      this.roomValue = newRoom;
-      this.roomKeyTarget.innerText = newRoom.key;
+    // The room may have been created before this window finished loading
+    void window.danmu.getRoom().then((room) => room && this.showRoom(room));
+    window.danmu.onRoomCreated((room) => this.showRoom(room));
+
+    window.danmu.onTestDanmu((testDanmu) => this.addCanvasDanmu(testDanmu));
+
+    window.danmu.onDanmuConfigUpdated((danmu) => {
+      this.appConfigValue = {
+        ...this.appConfigValue,
+        danmu,
+      };
     });
 
-    ipcRenderer.on('dashboard:sendTestDanmu', (_event, testDanmu: string) =>
-      this.addCanvasDanmu(testDanmu)
-    );
+    window.danmu.onDanmus((danmus) => danmus.forEach((danmu) => this.addCanvasDanmu(danmu.content)));
 
-    ipcRenderer.on(
-      'dashboard:updateDanmuConfig',
-      (_event, danmu: DanmuConfig) => {
-        this.appConfigValue = {
-          ...this.appConfigValue,
-          danmu,
-        };
-      }
-    );
-
-    this.poolingDanmus();
+    this.resize();
     window.requestAnimationFrame(() => this.draw());
   }
 
@@ -110,16 +95,8 @@ export class CanvasController extends Controller {
     window.requestAnimationFrame(() => this.draw());
   }
 
-  private poolingDanmus() {
-    fetch(this.api.toString())
-      .then((response) => response.json())
-      .then((danmus: Danmu[]) =>
-        danmus.forEach((danmu) => this.addCanvasDanmu(danmu.content))
-      )
-      .catch((error) =>
-        logger.error(`renderer @ get danmus error: ${JSON.stringify(error)}`)
-      );
-
-    setTimeout(() => this.poolingDanmus(), 900);
+  private showRoom(room: Room) {
+    this.roomValue = room;
+    this.roomKeyTarget.innerText = room.key;
   }
 }

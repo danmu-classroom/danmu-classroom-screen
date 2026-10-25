@@ -1,11 +1,9 @@
-import { nativeImage, Tray } from 'electron';
-import { dashboardWindow } from './create-dashboard-window';
+import { BrowserWindow, nativeImage, Tray } from 'electron';
+import icon from '../../../../../build-resources/icon.png?asset';
 
-export const tray = new Tray(
-  nativeImage.createFromPath('/public/img/icon.png').resize({
-    height: 32,
-    width: 32,
-  })
-);
-tray.setToolTip('danmu-classroom');
-tray.on('click', () => dashboardWindow.show());
+export function createTray(dashboardWindow: BrowserWindow) {
+  const tray = new Tray(nativeImage.createFromPath(icon).resize({ height: 32, width: 32 }));
+  tray.setToolTip('danmu-classroom');
+  tray.on('click', () => dashboardWindow.show());
+  return tray;
+}

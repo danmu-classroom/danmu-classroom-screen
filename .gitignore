@@ -67,5 +67,6 @@ typings/
 
 # app build and releases
 /build
+/out
 /dist
 /.cache

@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade to Electron 45, Node.js 24, TypeScript 6, Stimulus 3 (`@hotwired/stimulus`), Bootstrap 5.3 and electron-log 5
+- Replace Parcel 1 with electron-vite (Vite 8)
+- Renderers run with context isolation and sandbox; they talk to the main process through a preload `contextBridge` API (`window.danmu`)
+- Room creation and danmu polling run in the main process with the built-in `fetch`; danmus are pushed to the canvas over IPC
+- ESLint 10 flat config with typescript-eslint, Prettier 3
+- Development upstream is `http://localhost:3001`, overridable with `DANMU_UPSTREAM`
+
+### Fixed
+
+- Room key and danmus never showing since Electron 12 (`require is not defined` in renderers)
+- Room key lost when the room was created before the windows finished loading
+- Danmu polling stopping forever after one failed request
+- Missing tray icon
+
+### Added
+
+- Vitest tests for the server client, danmu polling and app config
+- Dev Container (Node 24 + desktop-lite for viewing the Electron windows)
+
 ## [0.4.1] - 2021-01-21
 
 ### Changed
