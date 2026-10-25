@@ -24,7 +24,10 @@ export default defineConfig({
     css: {
       preprocessorOptions: {
         // Bootstrap 5.3 still uses Sass features deprecated in Dart Sass; only our own code should warn
-        scss: { quietDeps: true, silenceDeprecations: ['import', 'global-builtin', 'color-functions'] },
+        scss: {
+          quietDeps: true,
+          silenceDeprecations: ['import', 'global-builtin', 'color-functions'],
+        },
       },
     },
     root: resolve(__dirname, 'src/app/renderers'),

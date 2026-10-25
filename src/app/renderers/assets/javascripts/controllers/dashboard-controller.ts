@@ -28,7 +28,7 @@ export class DashboardController extends Controller {
   // eslint-disable-next-line class-methods-use-this
   changeCanvasDisplay() {
     const input = document.querySelector<HTMLInputElement>(
-      'input[name=config-danmu-display]:checked'
+      'input[name=config-danmu-display]:checked',
     );
     const displayId = Number(input.value);
     window.danmu.changeCanvasDisplay(displayId);
@@ -43,7 +43,11 @@ export class DashboardController extends Controller {
       .getDisplays()
       .then((displays) => this.renderDisplayRadios(displays))
       .catch((error: unknown) =>
-        window.danmu.log('error', 'renderer @ dashboard get displays error:', error)
+        window.danmu.log(
+          'error',
+          'renderer @ dashboard get displays error:',
+          error,
+        ),
       );
   }
 
@@ -98,7 +102,7 @@ export class DashboardController extends Controller {
       input.id = inputId;
       input.setAttribute(
         'data-action',
-        'change->dashboard#changeCanvasDisplay'
+        'change->dashboard#changeCanvasDisplay',
       );
 
       const label = document.createElement('label');
@@ -113,7 +117,7 @@ export class DashboardController extends Controller {
     });
 
     displayRadios.forEach((displayRadio) =>
-      this.displaysInputContainerTarget.appendChild(displayRadio)
+      this.displaysInputContainerTarget.appendChild(displayRadio),
     );
   }
 

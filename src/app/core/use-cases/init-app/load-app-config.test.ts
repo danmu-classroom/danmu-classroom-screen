@@ -12,7 +12,9 @@ describe('appConfig', () => {
   it('uses the production server by default', async () => {
     vi.stubEnv('NODE_ENV', 'production');
 
-    expect((await loadAppConfig()).upstream).toBe('https://danmu-classroom.herokuapp.com');
+    expect((await loadAppConfig()).upstream).toBe(
+      'https://danmu-classroom.herokuapp.com',
+    );
   });
 
   it('uses the local server dev container in development', async () => {
@@ -26,9 +28,13 @@ describe('appConfig', () => {
     vi.stubEnv('DANMU_UPSTREAM', 'http://host.docker.internal:3001');
 
     vi.stubEnv('NODE_ENV', 'development');
-    expect((await loadAppConfig()).upstream).toBe('http://host.docker.internal:3001');
+    expect((await loadAppConfig()).upstream).toBe(
+      'http://host.docker.internal:3001',
+    );
 
     vi.stubEnv('NODE_ENV', 'production');
-    expect((await loadAppConfig()).upstream).toBe('https://danmu-classroom.herokuapp.com');
+    expect((await loadAppConfig()).upstream).toBe(
+      'https://danmu-classroom.herokuapp.com',
+    );
   });
 });

@@ -32,7 +32,9 @@ export class CanvasController extends Controller {
       };
     });
 
-    window.danmu.onDanmus((danmus) => danmus.forEach((danmu) => this.addCanvasDanmu(danmu.content)));
+    window.danmu.onDanmus((danmus) =>
+      danmus.forEach((danmu) => this.addCanvasDanmu(danmu.content)),
+    );
 
     this.resize();
     window.requestAnimationFrame(() => this.draw());
@@ -61,7 +63,7 @@ export class CanvasController extends Controller {
       0,
       0,
       this.canvasContext.canvas.width,
-      this.canvasContext.canvas.height
+      this.canvasContext.canvas.height,
     );
     this.canvasContext.font = `${this.appConfigValue.danmu.fontSize}px ${this.appConfigValue.danmu.fontFamily}`;
     this.canvasContext.fillStyle = this.appConfigValue.danmu.color;
@@ -88,7 +90,7 @@ export class CanvasController extends Controller {
 
     // Remove danmus which is out of screen range
     this.canvasDanmus = inScreenRangedCanvasDanmus.map(
-      ({ canvasDanmu }) => canvasDanmu
+      ({ canvasDanmu }) => canvasDanmu,
     );
 
     // Use recursive to update canvas

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <base href="./" />
@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
-    />
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:" />
     <title>彈幕教室</title>
     <link rel="stylesheet" href="./assets/stylesheets/dashboard.scss" />
     <script type="module" src="./assets/javascripts/dashboard.ts"></script>
@@ -16,22 +15,19 @@
   <body>
     <div class="container" data-controller="dashboard">
       <h1
-        class="display-2 d-flex flex-wrap align-items-center justify-content-center"
-      >
+        class="display-2 d-flex flex-wrap align-items-center justify-content-center">
         <img
           src="./assets/images/icon.png"
           width="150"
           height="150"
-          class="me-2"
-        />
+          class="me-2" />
         彈幕教室
       </h1>
       <div class="row">
         <div class="col-sm d-flex flex-wrap align-items-center mb-3">
           <img
             src="./assets/images/line-bot-qr.png"
-            class="img-fluid mx-auto"
-          />
+            class="img-fluid mx-auto" />
         </div>
         <div class="col-sm d-flex flex-wrap align-items-center mb-3">
           <ol>
@@ -40,8 +36,7 @@
               輸入房號
               <span
                 class="ms-2 text-warning display-2"
-                data-dashboard-target="roomKey"
-              ></span>
+                data-dashboard-target="roomKey"></span>
             </li>
             <li class="lead">暢所欲言</li>
           </ol>
@@ -55,14 +50,12 @@
               type="text"
               class="form-control"
               placeholder="請輸入想發送的彈幕內容"
-              data-dashboard-target="testDanmuInput"
-            />
+              data-dashboard-target="testDanmuInput" />
             <button
               class="btn btn-outline-primary"
               type="button"
               id="send-btn"
-              data-action="click->dashboard#sendTestDanmu"
-            >
+              data-action="click->dashboard#sendTestDanmu">
               測試
             </button>
           </div>
@@ -81,8 +74,7 @@
                 id="config-font-family"
                 name="config-font-family"
                 data-action="change->dashboard#updateDanmuConfig"
-                data-dashboard-target="fontFamilySelect"
-              >
+                data-dashboard-target="fontFamilySelect">
                 <option value="思源柔黑體" selected="selected">
                   思源柔黑體
                 </option>
@@ -103,8 +95,7 @@
                 step="1"
                 name="config-font-size"
                 data-action="change->dashboard#updateDanmuConfig"
-                data-dashboard-target="fontSizeInput"
-              />
+                data-dashboard-target="fontSizeInput" />
             </div>
             <div class="row">
               <label for="config-danmu-speed" class="form-label col"
@@ -120,15 +111,13 @@
                 step="200"
                 name="config-danmu-speed"
                 data-action="change->dashboard#updateDanmuConfig"
-                data-dashboard-target="speedInput"
-              />
+                data-dashboard-target="speedInput" />
             </div>
             <div class="row" id="displays-form">
               <label class="form-label col">使用哪個螢幕</label>
               <div
                 class="col"
-                data-dashboard-target="displaysInputContainer"
-              ></div>
+                data-dashboard-target="displaysInputContainer"></div>
             </div>
           </form>
 
@@ -137,8 +126,7 @@
               id="log-btn"
               class="btn btn-secondary btn-sm"
               type="button"
-              data-action="click->dashboard#openLogDir"
-            >
+              data-action="click->dashboard#openLogDir">
               開啓 Log 檔
             </button>
           </div>

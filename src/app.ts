@@ -1,4 +1,13 @@
-import { app, BrowserWindow, Display, globalShortcut, ipcMain, screen, shell, Tray } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  Display,
+  globalShortcut,
+  ipcMain,
+  screen,
+  shell,
+  Tray,
+} from 'electron';
 import logger from 'electron-log/main';
 import { DanmuConfig, Room } from './app/core/models';
 import {
@@ -25,7 +34,9 @@ export class App {
   private upstream = new UpstreamClient(appConfig);
 
   run() {
-    logger.info(`app @ is running at ${this.env} mode, upstream ${this.config.upstream}`);
+    logger.info(
+      `app @ is running at ${this.env} mode, upstream ${this.config.upstream}`,
+    );
 
     // Main process event listeners
     this.app
@@ -57,7 +68,10 @@ export class App {
   }
 
   private async createMainProcessModules() {
-    [this.canvasWindow, this.dashboardWindow] = await Promise.all([createCanvasWindow(), createDashboardWindow()]);
+    [this.canvasWindow, this.dashboardWindow] = await Promise.all([
+      createCanvasWindow(),
+      createDashboardWindow(),
+    ]);
     logger.info('app @ canvas and dashboard windows created');
     this.tray = createTray(this.dashboardWindow);
   }
@@ -69,7 +83,9 @@ export class App {
 
   private registerGlobalShortcuts() {
     // Global shortcuts
-    globalShortcut.register('CmdOrCtrl+Alt+I', () => this.dashboardWindow.webContents.openDevTools());
+    globalShortcut.register('CmdOrCtrl+Alt+I', () =>
+      this.dashboardWindow.webContents.openDevTools(),
+    );
 
     globalShortcut.register('CmdOrCtrl+Alt+L', () => this.openLogDir());
   }
@@ -84,7 +100,11 @@ export class App {
       app.quit();
     });
 
-    ipcMain.on('app:log', (_event, level: 'info' | 'error', ...params: unknown[]) => logger[level](...params));
+    ipcMain.on(
+      'app:log',
+      (_event, level: 'info' | 'error', ...params: unknown[]) =>
+        logger[level](...params),
+    );
 
     ipcMain.on('app:openLogDir', () => this.openLogDir());
 
@@ -92,10 +112,16 @@ export class App {
       this.canvasWindow.webContents.send('app:testDanmu', content);
     });
 
-    ipcMain.on('dashboard:updateDanmuConfig', (_event, danmuConfig: DanmuConfig) => {
-      this.config = { ...this.config, danmu: danmuConfig };
-      this.canvasWindow.webContents.send('app:danmuConfigUpdated', danmuConfig);
-    });
+    ipcMain.on(
+      'dashboard:updateDanmuConfig',
+      (_event, danmuConfig: DanmuConfig) => {
+        this.config = { ...this.config, danmu: danmuConfig };
+        this.canvasWindow.webContents.send(
+          'app:danmuConfigUpdated',
+          danmuConfig,
+        );
+      },
+    );
 
     ipcMain.on('dashboard:changeCanvasDisplay', (_event, displayId: number) => {
       const display = this.displays.find((it) => it.id === displayId);
@@ -117,7 +143,8 @@ export class App {
   private startPollingDanmus(room: Room) {
     this.stopPollingDanmus = pollDanmus({
       intervalMs: DANMU_POLLING_INTERVAL_MS,
-      onDanmus: (danmus) => this.canvasWindow.webContents.send('app:danmus', danmus),
+      onDanmus: (danmus) =>
+        this.canvasWindow.webContents.send('app:danmus', danmus),
       onError: (error) => logger.error('app @ get danmus error:', error),
       popDanmus: () => this.upstream.popDanmus(room),
     });

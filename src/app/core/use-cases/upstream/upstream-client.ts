@@ -9,7 +9,8 @@ export class UpstreamClient {
     const response = await fetch(new URL('api/rooms', this.config.upstream), {
       method: 'POST',
     });
-    if (!response.ok) throw new Error(`create room failed: HTTP ${response.status}`);
+    if (!response.ok)
+      throw new Error(`create room failed: HTTP ${response.status}`);
     return (await response.json()) as Room;
   }
 
@@ -17,7 +18,8 @@ export class UpstreamClient {
     const url = new URL(`api/rooms/${room.key}/danmus`, this.config.upstream);
     url.searchParams.append('auth_token', room.auth_token);
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`get danmus failed: HTTP ${response.status}`);
+    if (!response.ok)
+      throw new Error(`get danmus failed: HTTP ${response.status}`);
     return (await response.json()) as Danmu[];
   }
 }

@@ -11,4 +11,6 @@ window.danmu
     const application = Application.start();
     application.register('canvas', CanvasController);
   })
-  .catch((error: unknown) => window.danmu.log('error', 'renderer @ canvas init failed', error));
+  .catch((error: unknown) =>
+    window.danmu.log('error', 'renderer @ canvas init failed', error),
+  );

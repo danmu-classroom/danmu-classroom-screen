@@ -9,7 +9,12 @@ interface PollDanmusOptions {
 
 // Polls the server for new danmus until the returned stop function is called.
 // Errors are reported and polling continues on the next tick.
-export function pollDanmus({ intervalMs, onDanmus, onError, popDanmus }: PollDanmusOptions) {
+export function pollDanmus({
+  intervalMs,
+  onDanmus,
+  onError,
+  popDanmus,
+}: PollDanmusOptions) {
   let timer: NodeJS.Timeout | undefined;
   let stopped = false;
 

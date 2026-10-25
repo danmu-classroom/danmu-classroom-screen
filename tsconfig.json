@@ -18,5 +18,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts", "electron.vite.config.ts", "vitest.config.ts", "eslint.config.mjs"]
+  "include": [
+    "src/**/*.ts",
+    "electron.vite.config.ts",
+    "vitest.config.ts",
+    "eslint.config.mjs"
+  ]
 }

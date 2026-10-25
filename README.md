@@ -33,4 +33,3 @@ yarn lint       # eslint + prettier
 yarn typecheck  # tsc
 yarn build      # 打包 Windows / macOS / Linux
 ```
-
