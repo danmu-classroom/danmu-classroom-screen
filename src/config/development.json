@@ -1,5 +1,5 @@
 {
-  "upstream": "http://localhost:3000",
+  "upstream": "http://localhost:3001",
   "danmu": {
     "speed": 5000,
     "fontFamily": "思源柔黑體",

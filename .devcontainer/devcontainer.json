@@ -1,0 +1,33 @@
+{
+  "name": "danmu-classroom-screen (Node 16 + Electron)",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    // Lightweight desktop so the Electron window can be viewed at http://localhost:6080 (password: vscode)
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
+  },
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": { "label": "Electron desktop (noVNC)" }
+  },
+  "mounts": [
+    // Keep Linux node_modules (incl. the Linux Electron binary) out of the macOS checkout.
+    "source=danmu-classroom-screen-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+  ],
+  "containerEnv": {
+    // The server dev container publishes Rails on host port 3001.
+    "DANMU_UPSTREAM": "http://host.docker.internal:3001",
+    "ELECTRON_DISABLE_SANDBOX": "1"
+  },
+  "remoteUser": "node",
+  "postCreateCommand": "sudo chown node:node node_modules && yarn install --frozen-lockfile",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "gruntfuggly.todo-tree"
+      ]
+    }
+  }
+}
