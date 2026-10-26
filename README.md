@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **這個 repo 已封存，不再維護。** 彈幕教室已在 Cloudflare 上重寫，螢幕 app和其他部分都移到 **[danmu-classroom/danmu-classroom](https://github.com/danmu-classroom/danmu-classroom)**。
+
+新版螢幕 app 請到 [Releases](https://github.com/danmu-classroom/danmu-classroom/releases?q=screen-v&expanded=true) 下載。舊版（v0.4.1 以前）連到已停止的 Heroku 伺服器，無法再使用。
+
 # danmu-classroom-screen
 
 ## 使用說明
